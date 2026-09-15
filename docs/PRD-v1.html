@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mizan — Product Requirements Document V1</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+
+  :root {
+    --ink: #1a2430;
+    --muted: #5b6b7c;
+    --line: #d6dee6;
+    --brand: #0f766e;
+    --brand-light: #e6f4f1;
+    --warn: #b45309;
+    --warn-light: #fef6e7;
+    --code-bg: #f5f7f9;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.6pt;
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  h1, h2, h3, h4 { color: var(--ink); line-height: 1.25; margin: 0; }
+
+  h1 { font-size: 20pt; font-weight: 700; letter-spacing: -0.3px; }
+
+  h2 {
+    font-size: 13pt; font-weight: 700;
+    margin: 22px 0 9px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--brand);
+    break-after: avoid;
+  }
+
+  h3 {
+    font-size: 10.8pt; font-weight: 700;
+    margin: 15px 0 6px;
+    color: var(--brand);
+    break-after: avoid;
+  }
+
+  h4 {
+    font-size: 9.8pt; font-weight: 700;
+    margin: 11px 0 4px;
+    break-after: avoid;
+  }
+
+  p { margin: 0 0 7px; }
+  ul, ol { margin: 0 0 8px; padding-left: 17px; }
+  li { margin-bottom: 2.5px; }
+
+  code, .mono {
+    font-family: "Cascadia Mono", Consolas, "Courier New", monospace;
+    font-size: 8.4pt;
+    background: var(--code-bg);
+    padding: 1px 3px;
+    border-radius: 2px;
+  }
+
+  pre {
+    font-family: "Cascadia Mono", Consolas, "Courier New", monospace;
+    font-size: 8pt;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--brand);
+    padding: 7px 9px;
+    margin: 7px 0 10px;
+    white-space: pre;
+    overflow: hidden;
+    line-height: 1.42;
+    break-inside: avoid;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+    margin: 7px 0 12px;
+    break-inside: auto;
+  }
+  th {
+    background: var(--brand);
+    color: #fff;
+    text-align: left;
+    font-weight: 600;
+    padding: 5px 7px;
+    border: 1px solid var(--brand);
+    font-size: 8.3pt;
+  }
+  td {
+    padding: 4px 7px;
+    border: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) { background: #f8fafb; }
+  tr { break-inside: avoid; }
+
+  .cover {
+    height: 247mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    break-after: page;
+  }
+  .cover .logo {
+    font-size: 42pt; font-weight: 800;
+    color: var(--brand);
+    letter-spacing: -1.5px;
+    margin-bottom: 4px;
+  }
+  .cover .ar { font-size: 26pt; color: var(--brand); margin-bottom: 22px; font-weight: 600; }
+  .cover .subject { font-size: 15pt; font-weight: 600; margin-bottom: 6px; }
+  .cover .tagline { font-size: 10.5pt; color: var(--muted); margin-bottom: 34px; }
+  .cover table { width: 74%; margin: 0 auto; font-size: 9.5pt; }
+  .cover th { width: 38%; }
+
+  .note, .warn, .rule {
+    padding: 8px 11px;
+    margin: 9px 0 11px;
+    font-size: 8.9pt;
+    break-inside: avoid;
+  }
+  .note { background: var(--brand-light); border-left: 3px solid var(--brand); }
+  .warn { background: var(--warn-light); border-left: 3px solid var(--warn); }
+  .rule { background: #f5f7f9; border-left: 3px solid var(--muted); }
+  .note p:last-child, .warn p:last-child, .rule p:last-child { margin-bottom: 0; }
+
+  .page-break { break-before: page; }
+
+  .toc { font-size: 9.4pt; }
+  .toc ol { list-style: none; padding-left: 0; counter-reset: s; }
+  .toc > ol > li {
+    counter-increment: s;
+    padding: 3px 0;
+    border-bottom: 1px dotted var(--line);
+    font-weight: 600;
+  }
+  .toc > ol > li::before { content: counter(s) ". "; color: var(--brand); }
+  .toc ul { list-style: none; padding-left: 16px; font-weight: 400; color: var(--muted); font-size: 8.8pt; }
+  .toc ul li { padding: 1px 0; }
+
+  .tag {
+    display: inline-block;
+    font-size: 7.4pt;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+  }
+  .t-new { background: #dcfce7; color: #15803d; }
+  .t-chg { background: #fef3c7; color: #b45309; }
+  .t-kill { background: #fee2e2; color: #b91c1c; }
+
+  .schema th:nth-child(1) { width: 24%; }
+  .schema th:nth-child(2) { width: 24%; }
+  .schema th:nth-child(3) { width: 52%; }
+  .schema td:nth-child(1), .schema td:nth-child(2) {
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 8pt;
+  }
+
+  .tbl-title {
+    background: var(--ink);
+    color: #fff;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 9.2pt;
+    font-weight: 700;
+    padding: 5px 9px;
+    margin: 14px 0 0;
+    break-after: avoid;
+  }
+  .tbl-title .n { color: #7dd3c0; font-weight: 400; margin-right: 6px; }
+  .tbl-title + p { margin-top: 5px; font-size: 8.7pt; color: var(--muted); }
+
+  .two-col { display: flex; gap: 14px; }
+  .two-col > div { flex: 1; }
+
+  footer.doc-end {
+    margin-top: 26px;
+    padding-top: 9px;
+    border-top: 1px solid var(--line);
+    font-size: 8pt;
+    color: var(--muted);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="logo">MIZAN</div>
+  <div class="ar">ميزان</div>
+  <div class="subject">Product Requirements Document</div>
+  <div class="tagline">Internal Business Management &amp; Inventory System &mdash; Version 1</div>
+  <table>
+    <tr><th>Document version</th><td>1.0 &mdash; Design Baseline</td></tr>
+    <tr><th>Status</th><td>Approved for implementation</td></tr>
+    <tr><th>Date</th><td>13 September 2026</td></tr>
+    <tr><th>Product owner</th><td>Ayob Milad</td></tr>
+    <tr><th>Technology</th><td>Laravel 13 &middot; Blade &middot; Tailwind 4 &middot; Alpine.js &middot; MySQL 8</td></tr>
+    <tr><th>Supersedes</th><td>Requirements &amp; Business Rules V1 (10 Sep)<br>Use Cases PRD V1 (12 Sep)<br>ERD &amp; Database Design Decisions</td></tr>
+  </table>
+</div>
+
+<!-- ============ TOC ============ -->
+<h1>Contents</h1>
+<div class="toc">
+<ol>
+  <li>Purpose and Document Authority</li>
+  <li>System Overview and Scope</li>
+  <li>Actors and Responsibilities</li>
+  <li>Global Business Rules</li>
+  <li>Resolved Design Conflicts
+    <ul>
+      <li>C1 Sales session and warehouse &middot; C2 Technology stack &middot; C3 Purchase tables</li>
+      <li>C4 Payment methods &middot; C5 Opening cash float &middot; C6 Return warehouse</li>
+      <li>C7 Return structure &middot; C8 Role model</li>
+    </ul>
+  </li>
+  <li>Supplementary Design Decisions</li>
+  <li>Functional Requirements
+    <ul>
+      <li>Identity &middot; Catalog &middot; Inventory &middot; Purchasing &middot; Selling &middot; Returns &middot; Reporting</li>
+    </ul>
+  </li>
+  <li>Data Model &mdash; Entity Relationship Design
+    <ul>
+      <li>Identity and governance &middot; Master data &middot; Inventory core</li>
+      <li>Selling &middot; Purchasing &middot; Inventory operations &middot; Returns</li>
+    </ul>
+  </li>
+  <li>Technical Architecture</li>
+  <li>Security Requirements</li>
+  <li>Out of Scope &mdash; V2 Roadmap</li>
+  <li>Appendix A &mdash; Permission Catalogue</li>
+  <li>Appendix B &mdash; Role / Permission Matrix</li>
+  <li>Appendix C &mdash; Decision Log</li>
+</ol>
+</div>
+
+<!-- ============ 1 ============ -->
+<h2 class="page-break">1. Purpose and Document Authority</h2>
+
+<p>This document is the single authoritative specification for <strong>Mizan V1</strong>. It consolidates three earlier
+documents &mdash; the Requirements &amp; Business Rules paper, the Use Cases PRD, and the ERD Design Decisions paper &mdash;
+and resolves the contradictions that existed between them.</p>
+
+<div class="warn">
+<p><strong>Authority.</strong> Where this document differs from any earlier paper, <strong>this document governs</strong>.
+Section 5 lists every point on which the earlier documents disagreed, the decision taken, and the rules that were
+consequently cancelled. Rules cancelled here must not be reintroduced during implementation.</p>
+</div>
+
+<h3>1.1 Design philosophy</h3>
+<p>Mizan is not a CRUD application. Its difficulty lies in six properties that must hold under concurrent, real-world use:</p>
+
+<table>
+  <tr><th style="width:22%">Property</th><th>What it demands of the implementation</th></tr>
+  <tr><td>Transactional integrity</td><td>Every business operation that touches more than one row succeeds completely or not at all.</td></tr>
+  <tr><td>Inventory traceability</td><td>No quantity ever changes without a stock movement recording the cause.</td></tr>
+  <tr><td>Concurrency safety</td><td>Correctness is guaranteed by database locks, never by application-level checks alone.</td></tr>
+  <tr><td>Auditability</td><td>Sensitive actions answer: who, what, when, where, which record, what changed, why.</td></tr>
+  <tr><td>Accountability</td><td>Every operation carries the identity of the employee who performed it.</td></tr>
+  <tr><td>Historical integrity</td><td>Completed transactions are immutable. Corrections are new operations, never edits.</td></tr>
+</table>
+
+<p>The system must be able to answer, for any unit of stock: who sold it, from which warehouse, during which session,
+which invoice caused the decrease, why inventory increased, who performed an adjustment, why money was refunded, and
+how much cash an employee should hold at shift close.</p>
+
+<!-- ============ 2 ============ -->
+<h2>2. System Overview and Scope</h2>
+
+<p>Mizan is an internal business management and inventory system for a retail business operating multiple warehouses
+across different cities. V1 serves <strong>one company</strong>; it is not multi-tenant.</p>
+
+<h3>2.1 In scope</h3>
+<table>
+  <tr><th style="width:25%">Domain</th><th>Capabilities</th></tr>
+  <tr><td>Identity</td><td>Authentication, invitation-based employee onboarding, roles, permissions</td></tr>
+  <tr><td>Master data</td><td>Products, product units, categories, brands, warehouses, customers, suppliers</td></tr>
+  <tr><td>Inventory</td><td>Per-warehouse stock balances, stock movements, adjustments, inter-warehouse transfers</td></tr>
+  <tr><td>Purchasing</td><td>Purchase orders, order confirmation, goods receiving</td></tr>
+  <tr><td>Selling</td><td>Sales sessions, sales, invoices, multi-warehouse selling, walk-in customers</td></tr>
+  <tr><td>Returns</td><td>Multi-item returns against a sale, cash refunds, session reconciliation impact</td></tr>
+  <tr><td>Oversight</td><td>Reports, audit log, system settings</td></tr>
+</table>
+
+<h3>2.2 Out of scope for V1</h3>
+<p>Delivery representatives; customer accounts and customer portal; order and delivery tracking; real-time delivery
+status; customer-facing communication or chat; WebSocket infrastructure; online payment gateway integration;
+product variants; multi-tenancy; partial goods receiving; discounts at line-item level.</p>
+
+<div class="note">
+<p><strong>Extensibility constraint.</strong> V1 must remain structurally open to these features. Specific provisions
+are made in the data model: purchase receipts are separated from purchase orders so partial receiving becomes a
+constraint removal rather than a migration; the refund table carries a <code>method</code> column although only
+<code>CASH</code> is valid in V1.</p>
+</div>
+
+<!-- ============ 3 ============ -->
+<h2>3. Actors and Responsibilities</h2>
+
+<table>
+  <tr><th style="width:17%">Actor</th><th style="width:42%">Can do</th><th>Cannot do</th></tr>
+  <tr>
+    <td><strong>Admin</strong></td>
+    <td>Everything. Manages employees, roles, permissions, system settings, and reviews the audit log.</td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td><strong>Manager</strong></td>
+    <td>Manages products, categories, brands, suppliers, customers and warehouses. Creates and confirms purchase
+        orders. Views inventory, stock movements, all sales and all reports.</td>
+    <td>Manage users, roles, permissions or settings. Create sales. Adjust or transfer stock. Receive goods.</td>
+  </tr>
+  <tr>
+    <td><strong>Sales Employee</strong></td>
+    <td>Opens and closes own sales session, creates sales from any warehouse, creates and edits customers,
+        views own sales, executes returns and cash refunds.</td>
+    <td>View other employees' sales. Modify or delete completed sales. Deactivate or delete customers.
+        Touch inventory operations.</td>
+  </tr>
+  <tr>
+    <td><strong>Warehouse Employee</strong></td>
+    <td>Views inventory and stock movements, receives purchases, adjusts stock, transfers stock between warehouses.</td>
+    <td>Create sales. Manage users, roles or permissions. Delete inventory records.</td>
+  </tr>
+  <tr>
+    <td><strong>Customer</strong></td>
+    <td>A business entity only &mdash; exists to be associated with sales.</td>
+    <td>Has no login, password, role, permissions or dashboard in V1.</td>
+  </tr>
+</table>
+
+<div class="note">
+<p><strong>Separation of duties.</strong> The Manager reviews but does not execute. A manager who could also adjust
+stock could conceal a shortage and then approve his own correction. Where a business genuinely needs one person to
+do both, the correct answer is a new named role holding both permission sets &mdash; an explicit, auditable decision &mdash;
+not a weakening of the default roles.</p>
+</div>
+
+<!-- ============ 4 ============ -->
+<h2>4. Global Business Rules</h2>
+
+<table>
+  <tr><th style="width:16%">ID</th><th>Rule</th></tr>
+  <tr><td><strong>BR-GLOBAL-01</strong></td><td>Users must be authenticated before accessing any protected operation.</td></tr>
+  <tr><td><strong>BR-GLOBAL-02</strong></td><td>Every protected operation is authorised on the backend against the user's role permissions. Frontend permission checks exist for user experience only and never replace backend authorisation.</td></tr>
+  <tr><td><strong>BR-GLOBAL-03</strong></td><td>The backend is the source of truth. It calculates and validates prices, totals, taxes, discounts, stock quantities, warehouse access, the active sales session, refund amounts and permissions. No value in this list may be trusted from the client.</td></tr>
+  <tr><td><strong>BR-GLOBAL-04</strong></td><td>Records with historical transactions are never hard-deleted. Deactivation via a <code>status</code> column is used instead. Soft deletes are explicitly rejected (see §6.9).</td></tr>
+  <tr><td><strong>BR-GLOBAL-05</strong></td><td>Any operation that changes multiple related records executes inside a single database transaction: sale creation, purchase receiving, stock adjustment, stock transfer, return and refund.</td></tr>
+  <tr><td><strong>BR-GLOBAL-06</strong></td><td>Sensitive and inventory-related operations are recorded in the audit log with actor, action, entity, previous value, new value, reason where applicable, and timestamp.</td></tr>
+  <tr><td><strong>BR-GLOBAL-07</strong></td><td>Stock quantity may never become negative, by any operation, including manual adjustment. This is enforced both in application logic and by database constraint.</td></tr>
+  <tr><td><strong>BR-GLOBAL-08</strong></td><td>Inventory rows participating in a critical read-check-write sequence must be locked with <code>SELECT ... FOR UPDATE</code> for the duration of the transaction.</td></tr>
+</table>
+
+<!-- ============ 5 ============ -->
+<h2 class="page-break">5. Resolved Design Conflicts</h2>
+
+<p>The source documents contradicted each other on eight points. Each is resolved below. The <span class="tag t-kill">CANCELLED</span>
+rules are void and must not appear in the implementation.</p>
+
+<h3>C1 &mdash; Sales session and warehouse</h3>
+<p><strong>Conflict.</strong> The Requirements paper bound a session to exactly one warehouse (BR-SESSION-05/06/07/08).
+The Use Cases paper bound the session to the user only, with each sale carrying its own warehouse (UC-06, UC-07).</p>
+<p><strong>Decision.</strong> The session belongs to the <strong>user only</strong>. It has no warehouse.
+Every sale stores its own <code>warehouse_id</code>. An employee may sell from different warehouses within one session;
+changing the selected warehouse never affects sales already recorded.</p>
+<p><strong>Consequences.</strong></p>
+<ul>
+  <li><code>sales_sessions</code> has no <code>warehouse_id</code> column.</li>
+  <li><code>sales.warehouse_id</code> is mandatory and validated on <em>every</em> sale request, not once per session.</li>
+  <li><span class="tag t-kill">CANCELLED</span> BR-SESSION-05, BR-SESSION-06, BR-SESSION-07, BR-SESSION-08.</li>
+</ul>
+
+<h3>C2 &mdash; Technology stack</h3>
+<p><strong>Conflict.</strong> Both source papers specified a GraphQL API with a Vue front end.</p>
+<p><strong>Decision.</strong> V1 is a single Laravel application using <strong>Blade + Tailwind CSS + Alpine.js</strong>.
+No GraphQL, no Vue. The service layer, business rules, transaction boundaries and locking strategy are unchanged &mdash;
+only the presentation layer differs. A future API layer would sit on top of the same services.</p>
+
+<h3>C3 &mdash; Purchase tables</h3>
+<p><strong>Conflict.</strong> The Use Cases paper defined purchase orders with <code>DRAFT / CONFIRMED / RECEIVED</code>
+statuses, but the ERD table list contained only <code>purchase_receipts</code> &mdash; no <code>purchases</code> or
+<code>purchase_items</code>.</p>
+<p><strong>Decision.</strong> Four tables. The order and the receipt are separate entities.</p>
+<pre><code>purchases              → the order placed with the supplier
+purchase_items         → what was ordered, at what cost
+        ↓
+purchase_receipts      → the physical receiving event
+purchase_receipt_items → what actually arrived
+        ↓
+stock_movements        → reference = purchase_receipt (never the order)</code></pre>
+<p>V1 permits exactly one receipt per purchase, enforced by a unique constraint. V2 partial receiving is enabled by
+<em>removing that one constraint</em> &mdash; no data migration.</p>
+
+<h3>C4 &mdash; Payment methods and return eligibility</h3>
+<p><strong>Conflict.</strong> The reconciliation example distinguished <em>Gross Sales</em> from <em>Cash Sales</em>,
+implying non-cash payment, yet no payment method appeared anywhere in the sale structure.</p>
+<p><strong>Decision.</strong></p>
+<ul>
+  <li><code>sales.payment_method</code> is an enum: <code>CASH</code>, <code>CARD</code>, <code>TRANSFER</code>.</li>
+  <li><span class="tag t-new">NEW RULE</span> <strong>A return is permitted only when the original sale's payment method is <code>CASH</code>.</strong>
+      Sales paid by card or transfer cannot be returned in V1. The backend rejects such a request; the UI hides the return action.</li>
+  <li>Refund method remains <code>CASH</code> (BR-REFUND-04 stands).</li>
+</ul>
+<div class="note">
+<p><strong>Why this rule matters.</strong> Refunding a card sale in cash removes money from a drawer that never
+received it, producing a shift shortage the employee did not cause. Restricting returns to cash sales eliminates that
+class of reconciliation error entirely.</p>
+</div>
+
+<h3>C5 &mdash; Opening cash float</h3>
+<p><strong>Gap.</strong> Reconciliation was specified as <code>Cash Sales − Cash Refunds</code>, with no starting balance.
+A refund processed today against yesterday's cash sale would drive expected cash negative.</p>
+<p><strong>Decision.</strong> <span class="tag t-new">NEW</span> <code>sales_sessions.opening_float</code>, counted and
+entered by the employee at session start.</p>
+<pre><code>Expected Cash = Opening Float + Cash Sales − Cash Refunds
+Difference    = Actual Cash − Expected Cash</code></pre>
+<p>A difference does not prevent closure but is always recorded.</p>
+
+<h3>C6 &mdash; Destination warehouse for returned stock</h3>
+<p><strong>Gap.</strong> UC-12 said inventory increases in "the relevant warehouse", which C1 left undefined.</p>
+<p><strong>Decision.</strong> Returned stock always re-enters the <strong>original sale's warehouse</strong>.
+Inventory is therefore perfectly symmetric: what left a warehouse returns to it, and the
+<code>SALE</code> / <code>RETURN</code> movement pair reconciles per warehouse.</p>
+<p>Where goods are physically returned to a different branch, the correct handling is a return to the original
+warehouse followed by an explicit <strong>stock transfer</strong> &mdash; two traceable operations rather than one
+invisible one. The return screen must display which warehouse receives the stock.</p>
+
+<h3>C7 &mdash; Return structure</h3>
+<p><strong>Conflict.</strong> The flows described returning a single sale item; the entity model showed
+<code>Return → Return Items</code> with one refund.</p>
+<p><strong>Decision.</strong> A return is a <strong>multi-item</strong> document: <code>returns</code> + <code>return_items</code>,
+mirroring <code>sales</code> / <code>sale_items</code>. Exactly <strong>one refund per return</strong> (1:1), created in
+the same transaction and enforced by a unique constraint on <code>refunds.return_id</code>.</p>
+
+<h3>C8 &mdash; Role model</h3>
+<p><strong>Conflict.</strong> Both papers stated "a User belongs to a Role" (singular), yet the ERD listed a
+<code>role_user</code> pivot table implying many-to-many.</p>
+<p><strong>Decision.</strong> <strong>One role per user</strong> via <code>users.role_id</code>.
+<span class="tag t-kill">CANCELLED</span> <code>role_user</code>.</p>
+<p>Rationale: many-to-many roles make a user's effective permissions an unnamed union that nobody inspects as a whole,
+and it renders the <code>ROLE_CHANGED</code> audit entry meaningless. A user who performs two jobs is given a single
+role named for that combined job.</p>
+
+<!-- ============ 6 ============ -->
+<h2 class="page-break">6. Supplementary Design Decisions</h2>
+
+<h3>6.1 Multi-unit products <span class="tag t-new">NEW</span></h3>
+<p>Goods are purchased wholesale (cartons) and sold retail (pieces). A product therefore has several units of measure
+with conversion factors and independent prices.</p>
+
+<div class="rule">
+<p><strong>Governing rule &mdash; no exceptions.</strong> Stock is always stored in the <strong>base unit</strong>.
+Every operation converts to the base unit before touching inventory.</p>
+</div>
+
+<pre><code>Product: Pepsi 330ml
+
+Unit       factor   is_base   purchase price   selling price
+-------------------------------------------------------------
+piece         1        yes         0.800            1.500
+dozen        12        no          9.000           16.000
+carton       24        no         17.000           30.000</code></pre>
+
+<p>Prices are stored <em>per unit row</em>, never derived by multiplication: a carton at 17.000 is cheaper per piece
+than 24 individual pieces at 0.800, which is how wholesale pricing actually works.</p>
+
+<p>Every transaction line stores <code>product_unit_id</code>, a <strong>frozen</strong> <code>unit_factor</code>,
+the <code>quantity</code> in the chosen unit, and the computed <code>base_quantity</code>. Freezing the factor is
+mandatory for the same reason cost is frozen: if a carton is later redefined from 24 to 36, historical documents must
+continue to mean what they meant when issued.</p>
+
+<h4>Profit calculation across units</h4>
+<pre><code>unit_price     30.000   price of one carton
+quantity            2   cartons sold
+line_total     60.000
+base_quantity      48   pieces deducted from stock
+unit_cost       0.708   cost per BASE unit
+
+Profit = line_total − (base_quantity × unit_cost)
+       = 60.000 − (48 × 0.708) = 26.000</code></pre>
+
+<h3>6.2 Discounts <span class="tag t-new">NEW</span></h3>
+<ul>
+  <li>Discount is applied at <strong>invoice level</strong>, entered by the seller as a percentage, default 0.</li>
+  <li>Both <code>discount_percent</code> and the computed <code>discount_amount</code> are stored, so a printed invoice
+      and a report can never disagree through rounding.</li>
+  <li>The discount is distributed across lines and the resulting <code>net_unit_price</code> is stored per line.</li>
+  <li><strong>Refunds are calculated on the net (post-discount) price.</strong> A piece sold at 1000 with a 20% invoice
+      discount refunds 800 &mdash; what the customer actually paid.</li>
+</ul>
+
+<h3>6.3 Tax</h3>
+<p>Sales carry <code>subtotal</code>, <code>tax_amount</code> and <code>total</code>. Tax is
+<code>NOT NULL DEFAULT 0</code> &mdash; not nullable. A null money column propagates through
+<code>total = subtotal + tax_amount</code> and silently corrupts <code>SUM()</code> in reports; zero is the
+mathematically correct representation of "no tax".</p>
+
+<h3>6.4 Money and quantity precision</h3>
+<table>
+  <tr><th style="width:30%">Concern</th><th>Decision</th></tr>
+  <tr><td>Money columns</td><td><code>decimal(15,3)</code> &mdash; the Libyan Dinar has three decimal places (dirham)</td></tr>
+  <tr><td>Quantity columns</td><td><code>decimal(12,3)</code> &mdash; supports unit conversion factors and future weight/length products</td></tr>
+  <tr><td>Floating point</td><td>Never used for any monetary or quantity value</td></tr>
+  <tr><td>Historical prices</td><td>Frozen on <code>sale_items</code> and <code>purchase_items</code> at transaction time</td></tr>
+</table>
+
+<h3>6.5 Warehouse access</h3>
+<p>There is <strong>no</strong> user-to-warehouse assignment table. Following C1, a sales employee serves from whichever
+warehouse holds stock, so restricting them would contradict the session model. Warehouses carry
+<code>supervisor_id</code>, which is <strong>informational</strong>, not a constraint: making it a constraint would halt
+a warehouse whenever its supervisor is absent, and accountability is already captured by the acting user recorded on
+every operation.</p>
+
+<h3>6.6 Document numbering</h3>
+<p>Human-facing references (<code>INV</code>, <code>PO</code>, <code>ADJ</code>, <code>TR</code>, <code>RET</code>) are
+issued from a single <code>document_sequences</code> table, read under a row lock inside the operation's transaction.
+Deriving a number from <code>MAX(...) + 1</code> is rejected: two concurrent sales would receive the same invoice number.</p>
+<pre><code>lock row (type, year) → increment → INV-2026-00543 → commit</code></pre>
+<p>Invoice number is a column on <code>sales</code>; there is no separate invoice entity.</p>
+
+<h3>6.7 Categories</h3>
+<p>Flat. No parent-child nesting in V1.</p>
+
+<h3>6.8 Customers</h3>
+<p><code>sales.customer_id</code> is nullable &mdash; walk-in sales without a recorded customer are permitted.
+Where a customer is recorded, <code>phone</code> is unique when provided (MySQL permits unlimited NULLs under a
+unique index, which is exactly the required semantic).</p>
+
+<h3>6.9 Deletion strategy</h3>
+<p>Laravel <code>SoftDeletes</code> is rejected. A <code>status</code> enum (<code>active</code> / <code>inactive</code>)
+is used instead. Soft deletes silently exclude rows from every query, which is dangerous in an inventory system: a
+"deleted" product may still have physical stock on a shelf.</p>
+
+<h3>6.10 Language and presentation</h3>
+<p>The interface is <strong>Arabic, right-to-left</strong>. Product, customer and warehouse names are entered in Arabic.
+SKUs, document references and all numerals remain Latin and are rendered with directional isolation and tabular figures
+so they neither reverse inside Arabic text nor break column alignment in financial tables.</p>
+
+<!-- ============ 7 ============ -->
+<h2 class="page-break">7. Functional Requirements</h2>
+
+<h3>7.1 Employee onboarding (UC-14)</h3>
+<pre><code>Admin creates account → system issues invitation → employee opens link
+→ employee sets own password → account becomes active</code></pre>
+<ul>
+  <li>The admin never sets an employee password.</li>
+  <li>The invitation token is temporary, expiring and single-use.</li>
+  <li>A user cannot authenticate while <code>status = pending</code> or <code>disabled</code>.</li>
+  <li>Employees are disabled, never deleted; historical transactions retain their link to the employee.</li>
+</ul>
+
+<h3>7.2 Roles and permissions (UC-15)</h3>
+<ul>
+  <li>Permissions are system-defined constants, seeded, never created or deleted through the interface.</li>
+  <li>Roles are configurable and hold any set of permissions.</li>
+  <li>Changing a role's permissions immediately affects every user holding that role.</li>
+  <li>A role cannot be deleted while any user is assigned to it, nor if it is a system role.</li>
+  <li>Role changes are audited as <code>ROLE_CHANGED</code> with old and new values.</li>
+</ul>
+
+<h3>7.3 Products (UC-10)</h3>
+<ul>
+  <li>SKU is required and unique. Each sellable SKU is an independent product; there are no product variants in V1.</li>
+  <li>Creating a product never creates stock. Stock enters only through receiving, adjustment, transfer or return.</li>
+  <li>Every product has exactly one base unit; additional units carry a conversion factor and their own prices.</li>
+  <li>Inactive products cannot be sold.</li>
+  <li>Price changes never alter historical <code>sale_items</code> or <code>purchase_items</code> prices.</li>
+  <li><code>reorder_level</code> (in base units) drives the stock status indicator:
+      <code>0 → out</code>, <code>≤ reorder_level → low</code>, otherwise <code>available</code>.</li>
+</ul>
+
+<h3>7.4 Create sale (UC-01)</h3>
+<pre><code>authenticated user
+  → backend resolves the user's OPEN session      (never trusts a client session id)
+  → validate warehouse, products active, quantities > 0
+  → BEGIN TRANSACTION
+      → lock warehouse_stocks rows                (SELECT ... FOR UPDATE)
+      → verify availability in base units
+      → calculate prices, discount distribution, tax, total
+      → issue invoice number from document_sequences
+      → insert sale + sale_items (freezing unit_price, unit_cost, unit_factor, net_unit_price)
+      → decrement warehouse_stocks
+      → insert stock_movements (SALE, negative, reference = sale)
+    → COMMIT
+  → return invoice</code></pre>
+<p><strong>Rejections:</strong> no open session; insufficient stock; inactive product; unauthorised warehouse.
+On any failure the entire transaction rolls back &mdash; no partial sale, no stock change, no movement rows.</p>
+
+<h3>7.5 Sales session (UC-06, UC-08)</h3>
+<ul>
+  <li>A sales employee may hold <strong>at most one open session</strong>, enforced at database level (§8.15).</li>
+  <li>Opening requires the employee to count and enter the opening float.</li>
+  <li>Every sale and every return is attached to the session open at the time it was created.</li>
+  <li>Session totals are always derived from recorded transactions, never entered manually.</li>
+  <li>Closing records expected cash, actual cash, the difference and optional notes. A difference never blocks closure.</li>
+  <li>A closed session is never reopened and never receives new sales. Post-closure corrections are a separate,
+      authorised, audited workflow that amends reconciliation data only &mdash; never the underlying sales.</li>
+</ul>
+
+<h3>7.6 Purchasing (UC-02, UC-03)</h3>
+<ul>
+  <li>A purchase order belongs to one supplier and holds one or more items with ordered quantity and unit cost.</li>
+  <li>Statuses: <code>draft → confirmed → received</code>, plus <code>cancelled</code>
+      <span class="tag t-new">ADDED</span> so abandoned orders do not remain open indefinitely.</li>
+  <li>Creating or confirming a purchase does <strong>not</strong> change inventory.</li>
+  <li>Only a confirmed, not-yet-received purchase can be received. Receiving selects the destination warehouse.</li>
+  <li>Receiving increments stock and writes <code>PURCHASE_RECEIPT</code> movements inside one transaction, then sets
+      the order to <code>received</code>. A purchase cannot be received twice.</li>
+</ul>
+
+<h3>7.7 Stock adjustment (UC-04)</h3>
+<ul>
+  <li>Used when counted physical quantity differs from system quantity. A reason is mandatory.</li>
+  <li><code>difference = actual − current</code>, computed by the backend.</li>
+  <li>Recorded per line: previous quantity, new quantity, difference. Plus header: warehouse, user, reason, timestamp.</li>
+  <li>Adjustment, stock update, movement and audit entry are one transaction. Resulting stock may never be negative.</li>
+  <li>Completed adjustments are never edited or deleted.</li>
+</ul>
+
+<h3>7.8 Stock transfer (UC-05)</h3>
+<ul>
+  <li>Source and destination warehouses must differ &mdash; enforced by database constraint.</li>
+  <li>Source is locked and verified; destination row is locked or safely created.</li>
+  <li>Produces exactly two movements per line: <code>TRANSFER_OUT</code> (negative) and <code>TRANSFER_IN</code> (positive).</li>
+  <li>Partial transfers are impossible: the whole transfer commits or rolls back.</li>
+</ul>
+
+<h3>7.9 Returns and refunds (UC-12, UC-13)</h3>
+<ul>
+  <li>Every return references exactly one completed sale whose payment method is <code>CASH</code>.</li>
+  <li>Returnable quantity per line = <code>sale_items.quantity − sale_items.returned_quantity</code>.
+      The sale item row is locked while this is verified and incremented, so concurrent returns cannot exceed what was sold.</li>
+  <li>A reason is mandatory on every return.</li>
+  <li>The return is attached to the employee's open session and affects that session's reconciliation.</li>
+  <li>Refund amount is computed server-side from net line prices; the client cannot propose an amount.</li>
+  <li>Return, stock increase, movement, refund and audit entry are a single transaction.</li>
+  <li>The original sale is never modified. Completed returns and refunds are never edited or deleted.</li>
+</ul>
+
+<h3>7.10 Stock movements (UC-17)</h3>
+<p>Every inventory change, without exception, creates a movement. Movements are historical and read-only.</p>
+<table>
+  <tr><th style="width:28%">Type</th><th style="width:14%">Sign</th><th>Reference</th></tr>
+  <tr><td><code>PURCHASE_RECEIPT</code></td><td>positive</td><td>purchase_receipt</td></tr>
+  <tr><td><code>SALE</code></td><td>negative</td><td>sale</td></tr>
+  <tr><td><code>RETURN</code></td><td>positive</td><td>return</td></tr>
+  <tr><td><code>ADJUSTMENT</code></td><td>either</td><td>stock_adjustment</td></tr>
+  <tr><td><code>TRANSFER_OUT</code></td><td>negative</td><td>stock_transfer</td></tr>
+  <tr><td><code>TRANSFER_IN</code></td><td>positive</td><td>stock_transfer</td></tr>
+</table>
+
+<h3>7.11 Reporting (UC-16)</h3>
+<p>Sales, purchases, inventory, profit, stock movement, sales-employee performance and session reports. All read-only,
+all sourced from authoritative business records, all filtered by the viewer's permissions. Profit reporting relies on
+<code>sale_items.unit_cost</code> captured at sale time &mdash; without it, changing a product's purchase price would
+silently rewrite last year's profit.</p>
+
+<h3>7.12 System settings (UC-18)</h3>
+<p>Company identity, currency, tax rate, invoice prefix and notification preferences. Settings marked critical are
+validated and audited on change. Authentication and authorisation logic is never exposed as a business setting, and no
+setting change may alter the meaning of historical invoices.</p>
+
+<!-- ============ 8 ============ -->
+<h2 class="page-break">8. Data Model &mdash; Entity Relationship Design</h2>
+
+<p>Twenty-six tables. All money is <code>decimal(15,3)</code>; all quantities are <code>decimal(12,3)</code>.
+All foreign keys are <code>RESTRICT</code> on delete unless stated, in support of BR-GLOBAL-04; only true child rows
+cascade.</p>
+
+<h3>8.1 Architectural separation</h3>
+<pre><code>            Inventory Operation
+                    │
+              DB Transaction
+         ┌──────────┴──────────┐
+         ▼                     ▼
+  warehouse_stocks       stock_movements
+  current balance        immutable history
+  "how much?"            "why did it change?"</code></pre>
+<p>Current stock is <strong>stored</strong>, not recomputed by summing movements. Movements provide the audit trail;
+<code>balance_after</code> on each movement lets the two be reconciled at any time.</p>
+
+<h4>Identity and governance</h4>
+
+<p class="tbl-title"><span class="n">1</span>roles</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>name</td><td>varchar(50) UNIQUE</td><td>Display name</td></tr>
+  <tr><td>slug</td><td>varchar(50) UNIQUE</td><td>admin, manager, sales_employee, warehouse_employee</td></tr>
+  <tr><td>description</td><td>varchar(255) NULL</td><td></td></tr>
+  <tr><td>is_system</td><td>boolean DEFAULT 0</td><td>System roles cannot be deleted</td></tr>
+  <tr><td>timestamps</td><td></td><td></td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">2</span>permissions</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>name</td><td>varchar(100) UNIQUE</td><td>e.g. <code>sales.create</code></td></tr>
+  <tr><td>group</td><td>varchar(50)</td><td>Grouping for the permission UI</td></tr>
+  <tr><td>description</td><td>varchar(255) NULL</td><td></td></tr>
+</table>
+<p style="font-size:8.5pt;color:#5b6b7c">No timestamps &mdash; seeded system constants.</p>
+
+<p class="tbl-title"><span class="n">3</span>permission_role</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>role_id</td><td>FK roles CASCADE</td><td rowspan="2">Composite primary key, no id, no timestamps</td></tr>
+  <tr><td>permission_id</td><td>FK permissions CASCADE</td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">4</span>users</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>role_id</td><td>FK roles RESTRICT</td><td>Exactly one role per user (C8)</td></tr>
+  <tr><td>name</td><td>varchar(100)</td><td></td></tr>
+  <tr><td>email</td><td>varchar(150) UNIQUE</td><td></td></tr>
+  <tr><td>phone</td><td>varchar(20) NULL</td><td></td></tr>
+  <tr><td>password</td><td>varchar(255) NULL</td><td>NULL until the invitation is accepted</td></tr>
+  <tr><td>status</td><td>enum pending / active / disabled</td><td>Login rejected unless active</td></tr>
+  <tr><td>last_login_at</td><td>timestamp NULL</td><td></td></tr>
+  <tr><td>remember_token</td><td>varchar(100) NULL</td><td></td></tr>
+  <tr><td>timestamps</td><td></td><td>Index: role_id, status</td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">5</span>user_invitations</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>user_id</td><td>FK users CASCADE</td><td></td></tr>
+  <tr><td>token_hash</td><td>varchar(64) UNIQUE</td><td><strong>SHA-256 of the token, never the token itself</strong></td></tr>
+  <tr><td>expires_at</td><td>timestamp</td><td>Expired token is rejected</td></tr>
+  <tr><td>accepted_at</td><td>timestamp NULL</td><td>Non-null enforces single use</td></tr>
+  <tr><td>invited_by</td><td>FK users RESTRICT</td><td></td></tr>
+  <tr><td>timestamps</td><td></td><td></td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">6</span>audit_logs</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>user_id</td><td>FK users RESTRICT NULL</td><td>NULL for system-originated events</td></tr>
+  <tr><td>action</td><td>varchar(50)</td><td>ROLE_CHANGED, STOCK_ADJUSTED, REFUND_CREATED …</td></tr>
+  <tr><td>auditable_type</td><td>varchar(100)</td><td rowspan="2">Polymorphic target. Index (type, id)</td></tr>
+  <tr><td>auditable_id</td><td>bigint unsigned</td></tr>
+  <tr><td>old_values</td><td>json NULL</td><td></td></tr>
+  <tr><td>new_values</td><td>json NULL</td><td></td></tr>
+  <tr><td>reason</td><td>varchar(255) NULL</td><td></td></tr>
+  <tr><td>ip_address</td><td>varchar(45) NULL</td><td></td></tr>
+  <tr><td>terminal_name</td><td>varchar(50) NULL</td><td>Which point of sale performed the action</td></tr>
+  <tr><td>created_at</td><td>timestamp</td><td><strong>No updated_at</strong> &mdash; immutable by nature</td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">7</span>settings</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>key</td><td>varchar(100) UNIQUE</td><td>company_name, currency, tax_rate, invoice_prefix …</td></tr>
+  <tr><td>value</td><td>text NULL</td><td></td></tr>
+  <tr><td>type</td><td>enum string / integer / decimal / boolean / json</td><td>Cast target</td></tr>
+  <tr><td>group</td><td>varchar(50)</td><td></td></tr>
+  <tr><td>is_critical</td><td>boolean DEFAULT 0</td><td>Critical changes are audited</td></tr>
+  <tr><td>updated_by</td><td>FK users RESTRICT NULL</td><td></td></tr>
+  <tr><td>timestamps</td><td></td><td></td></tr>
+</table>
+
+<h4 class="page-break">Master data</h4>
+
+<p class="tbl-title"><span class="n">8</span>warehouses</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>name</td><td>varchar(100)</td><td></td></tr>
+  <tr><td>code</td><td>varchar(20) UNIQUE</td><td>TRP, BNG …</td></tr>
+  <tr><td>city / address / phone</td><td>varchar NULL</td><td></td></tr>
+  <tr><td>supervisor_id</td><td>FK users RESTRICT NULL</td><td>Informational, not an access constraint (§6.5)</td></tr>
+  <tr><td>status</td><td>enum active / inactive</td><td></td></tr>
+  <tr><td>timestamps</td><td></td><td></td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">9</span>categories &nbsp;&middot;&nbsp; <span class="n">10</span>brands</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>name</td><td>varchar(100) UNIQUE</td><td></td></tr>
+  <tr><td>description</td><td>varchar(255) NULL</td><td>categories only</td></tr>
+  <tr><td>status</td><td>enum active / inactive</td><td>Flat &mdash; no parent_id (§6.7)</td></tr>
+  <tr><td>timestamps</td><td></td><td></td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">11</span>products</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>sku</td><td>varchar(50) UNIQUE</td><td>Required; Latin characters</td></tr>
+  <tr><td>name</td><td>varchar(150)</td><td>Arabic</td></tr>
+  <tr><td>category_id</td><td>FK categories RESTRICT NULL</td><td></td></tr>
+  <tr><td>brand_id</td><td>FK brands RESTRICT NULL</td><td></td></tr>
+  <tr><td>description</td><td>text NULL</td><td></td></tr>
+  <tr><td>reorder_level</td><td>decimal(12,3) DEFAULT 0</td><td>In base units; drives low-stock status</td></tr>
+  <tr><td>status</td><td>enum active / inactive</td><td>Inactive products cannot be sold</td></tr>
+  <tr><td>timestamps</td><td></td><td>Index: status, category_id, brand_id, name</td></tr>
+</table>
+<p style="font-size:8.5pt;color:#5b6b7c">Prices live on <code>product_units</code>, not here.</p>
+
+<p class="tbl-title"><span class="n">12</span>product_units <span class="tag t-new">NEW</span></p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>product_id</td><td>FK products CASCADE</td><td></td></tr>
+  <tr><td>name</td><td>varchar(30)</td><td>piece / dozen / carton. UNIQUE (product_id, name)</td></tr>
+  <tr><td>factor</td><td>decimal(12,4)</td><td>How many base units this unit contains</td></tr>
+  <tr><td>is_base</td><td>boolean DEFAULT 0</td><td>Base unit has factor = 1</td></tr>
+  <tr><td>barcode</td><td>varchar(50) UNIQUE NULL</td><td>Each unit may carry its own barcode</td></tr>
+  <tr><td>purchase_price</td><td>decimal(15,3) DEFAULT 0</td><td rowspan="2">Explicit per unit &mdash; never derived by multiplication</td></tr>
+  <tr><td>selling_price</td><td>decimal(15,3) DEFAULT 0</td></tr>
+  <tr><td>status</td><td>enum active / inactive</td><td></td></tr>
+  <tr><td>base_key</td><td>generated STORED, UNIQUE</td><td><code>IF(is_base, product_id, NULL)</code> &mdash; guarantees exactly one base unit per product</td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">13</span>customers</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>name</td><td>varchar(100)</td><td>Required</td></tr>
+  <tr><td>phone</td><td>varchar(20) UNIQUE NULL</td><td>Unique when provided</td></tr>
+  <tr><td>email / address</td><td>varchar NULL</td><td></td></tr>
+  <tr><td>notes</td><td>text NULL</td><td></td></tr>
+  <tr><td>status</td><td>enum active / inactive</td><td></td></tr>
+  <tr><td>created_by</td><td>FK users RESTRICT NULL</td><td>Which employee registered this customer</td></tr>
+  <tr><td>timestamps</td><td></td><td></td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">14</span>suppliers</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>name</td><td>varchar(100)</td><td>Required</td></tr>
+  <tr><td>contact_person</td><td>varchar(100) NULL</td><td></td></tr>
+  <tr><td>phone / email / address</td><td>varchar NULL</td><td></td></tr>
+  <tr><td>notes</td><td>text NULL</td><td></td></tr>
+  <tr><td>status</td><td>enum active / inactive</td><td>Inactive suppliers cannot receive new purchases</td></tr>
+  <tr><td>timestamps</td><td></td><td></td></tr>
+</table>
+
+<h4 class="page-break">Inventory core</h4>
+
+<p class="tbl-title"><span class="n">15</span>warehouse_stocks</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>warehouse_id</td><td>FK warehouses RESTRICT</td><td rowspan="2">UNIQUE (warehouse_id, product_id)</td></tr>
+  <tr><td>product_id</td><td>FK products RESTRICT</td></tr>
+  <tr><td>quantity</td><td>decimal(12,3) unsigned DEFAULT 0</td><td>Always in base units. <code>CHECK (quantity &gt;= 0)</code></td></tr>
+  <tr><td>timestamps</td><td></td><td>Index: product_id</td></tr>
+</table>
+<div class="note">
+<p><strong>Defence in depth.</strong> <code>unsigned</code> plus a <code>CHECK</code> constraint makes negative stock
+impossible at the storage layer. The application check remains, to produce a comprehensible error message &mdash; but the
+database guarantees the invariant even if a code path is wrong.</p>
+</div>
+
+<p class="tbl-title"><span class="n">16</span>stock_movements</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>product_id</td><td>FK products RESTRICT</td><td></td></tr>
+  <tr><td>warehouse_id</td><td>FK warehouses RESTRICT</td><td></td></tr>
+  <tr><td>movement_type</td><td>enum (6 types)</td><td>See §7.10</td></tr>
+  <tr><td>quantity</td><td>decimal(12,3) <em>signed</em></td><td>Positive = in, negative = out. Base units only</td></tr>
+  <tr><td>balance_after</td><td>decimal(12,3) unsigned</td><td>Balance immediately after this movement</td></tr>
+  <tr><td>reference_type</td><td>varchar(100)</td><td rowspan="2">Polymorphic source. Index (type, id)</td></tr>
+  <tr><td>reference_id</td><td>bigint unsigned</td></tr>
+  <tr><td>user_id</td><td>FK users RESTRICT</td><td></td></tr>
+  <tr><td>reason</td><td>varchar(255) NULL</td><td></td></tr>
+  <tr><td>created_at</td><td>timestamp</td><td><strong>No updated_at</strong>. Index (product, warehouse, created_at)</td></tr>
+</table>
+<div class="warn">
+<p><strong>Polymorphic trade-off.</strong> The database cannot enforce referential integrity on
+<code>reference_id</code>, because its target table varies. This is accepted deliberately &mdash; the alternative is five
+nullable foreign keys. The mitigation is mandatory: <strong>stock movements are created exclusively through a single
+service</strong>. No other code path may insert into this table.</p>
+</div>
+
+<p class="tbl-title"><span class="n">17</span>document_sequences <span class="tag t-new">NEW</span></p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>document_type</td><td>varchar(20)</td><td rowspan="2">Composite primary key</td></tr>
+  <tr><td>year</td><td>smallint unsigned</td></tr>
+  <tr><td>last_number</td><td>int unsigned DEFAULT 0</td><td>Incremented under row lock inside the caller's transaction</td></tr>
+</table>
+
+<h4>Selling</h4>
+
+<p class="tbl-title"><span class="n">18</span>sales_sessions</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>user_id</td><td>FK users RESTRICT</td><td><strong>No warehouse_id</strong> (C1)</td></tr>
+  <tr><td>status</td><td>enum open / closed</td><td></td></tr>
+  <tr><td>opening_float</td><td>decimal(15,3) DEFAULT 0</td><td>Counted by the employee at start (C5)</td></tr>
+  <tr><td>opened_at</td><td>timestamp</td><td></td></tr>
+  <tr><td>closed_at</td><td>timestamp NULL</td><td></td></tr>
+  <tr><td>expected_cash</td><td>decimal(15,3) NULL</td><td>Derived at close from transactions</td></tr>
+  <tr><td>actual_cash</td><td>decimal(15,3) NULL</td><td>Entered by the employee</td></tr>
+  <tr><td>difference</td><td>decimal(15,3) NULL</td><td>Backend-calculated; recorded, never hidden</td></tr>
+  <tr><td>closing_notes</td><td>text NULL</td><td></td></tr>
+  <tr><td>active_key</td><td>generated STORED, UNIQUE</td><td><code>IF(status='open', user_id, NULL)</code></td></tr>
+</table>
+<div class="note">
+<p><strong>One open session, guaranteed.</strong> A generated column holds the user id only while the session is open,
+under a unique index. Because MySQL permits unlimited NULLs in a unique index, closed sessions are unconstrained while
+a second open session is physically impossible &mdash; even if two requests arrive simultaneously and both pass the
+application check.</p>
+</div>
+
+<p class="tbl-title"><span class="n">19</span>sales</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>invoice_number</td><td>varchar(30) UNIQUE</td><td>INV-2026-00001, from document_sequences</td></tr>
+  <tr><td>sales_session_id</td><td>FK sales_sessions RESTRICT</td><td>Resolved by the backend, never from the client</td></tr>
+  <tr><td>user_id</td><td>FK users RESTRICT</td><td>The selling employee</td></tr>
+  <tr><td>customer_id</td><td>FK customers RESTRICT NULL</td><td>NULL = walk-in sale</td></tr>
+  <tr><td>warehouse_id</td><td>FK warehouses RESTRICT</td><td>Mandatory per sale (C1)</td></tr>
+  <tr><td>payment_method</td><td>enum CASH / CARD / TRANSFER</td><td>Returns permitted only when CASH (C4)</td></tr>
+  <tr><td>subtotal</td><td>decimal(15,3)</td><td></td></tr>
+  <tr><td>discount_percent</td><td>decimal(5,2) DEFAULT 0</td><td rowspan="2">Both stored &mdash; percentage and computed amount</td></tr>
+  <tr><td>discount_amount</td><td>decimal(15,3) DEFAULT 0</td></tr>
+  <tr><td>tax_amount</td><td>decimal(15,3) NOT NULL DEFAULT 0</td><td>Never nullable (§6.3)</td></tr>
+  <tr><td>total</td><td>decimal(15,3)</td><td></td></tr>
+  <tr><td>notes</td><td>varchar(255) NULL</td><td></td></tr>
+  <tr><td>timestamps</td><td></td><td>Index: session, user, customer, warehouse, created_at, payment_method</td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">20</span>sale_items</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td>id</td><td>bigint unsigned PK</td><td></td></tr>
+  <tr><td>sale_id</td><td>FK sales CASCADE</td><td></td></tr>
+  <tr><td>product_id</td><td>FK products RESTRICT</td><td></td></tr>
+  <tr><td>product_unit_id</td><td>FK product_units RESTRICT</td><td>The unit actually sold</td></tr>
+  <tr><td>unit_factor</td><td>decimal(12,4)</td><td><strong>Frozen</strong> at sale time (§6.1)</td></tr>
+  <tr><td>quantity</td><td>decimal(12,3)</td><td>In the selected unit</td></tr>
+  <tr><td>base_quantity</td><td>decimal(12,3)</td><td>quantity × unit_factor &mdash; what stock is deducted by</td></tr>
+  <tr><td>unit_price</td><td>decimal(15,3)</td><td>Price of one selected unit, frozen</td></tr>
+  <tr><td>unit_cost</td><td>decimal(15,3)</td><td>Cost per <strong>base</strong> unit, frozen &mdash; profit reporting</td></tr>
+  <tr><td>discount_share</td><td>decimal(15,3) DEFAULT 0</td><td>This line's share of the invoice discount</td></tr>
+  <tr><td>net_unit_price</td><td>decimal(15,3)</td><td>Post-discount price &mdash; the basis for refunds</td></tr>
+  <tr><td>line_total</td><td>decimal(15,3)</td><td></td></tr>
+  <tr><td>returned_quantity</td><td>decimal(12,3) DEFAULT 0</td><td>Running counter; locked during return validation</td></tr>
+</table>
+
+<h4 class="page-break">Purchasing</h4>
+
+<p class="tbl-title"><span class="n">21</span>purchases &nbsp;&middot;&nbsp; <span class="n">22</span>purchase_items</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">purchases</td></tr>
+  <tr><td>reference_number</td><td>varchar(30) UNIQUE</td><td>PO-2026-00001</td></tr>
+  <tr><td>supplier_id</td><td>FK suppliers RESTRICT</td><td></td></tr>
+  <tr><td>status</td><td>enum draft / confirmed / received / cancelled</td><td><code>cancelled</code> added in this revision</td></tr>
+  <tr><td>subtotal, total</td><td>decimal(15,3)</td><td></td></tr>
+  <tr><td>created_by</td><td>FK users RESTRICT</td><td></td></tr>
+  <tr><td>confirmed_by / confirmed_at</td><td>FK users NULL / timestamp NULL</td><td></td></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">purchase_items</td></tr>
+  <tr><td>purchase_id</td><td>FK purchases CASCADE</td><td></td></tr>
+  <tr><td>product_id</td><td>FK products RESTRICT</td><td></td></tr>
+  <tr><td>product_unit_id, unit_factor</td><td>FK / decimal(12,4)</td><td>Purchasing unit, frozen</td></tr>
+  <tr><td>quantity, base_quantity</td><td>decimal(12,3)</td><td></td></tr>
+  <tr><td>unit_cost, line_total</td><td>decimal(15,3)</td><td>Historical values</td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">23</span>purchase_receipts &nbsp;&middot;&nbsp; <span class="n">24</span>purchase_receipt_items</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">purchase_receipts</td></tr>
+  <tr><td>purchase_id</td><td>FK purchases RESTRICT</td><td><strong>UNIQUE</strong> &mdash; one receipt per order in V1</td></tr>
+  <tr><td>warehouse_id</td><td>FK warehouses RESTRICT</td><td>Destination chosen at receiving</td></tr>
+  <tr><td>received_by</td><td>FK users RESTRICT</td><td></td></tr>
+  <tr><td>received_at</td><td>timestamp</td><td></td></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">purchase_receipt_items</td></tr>
+  <tr><td>purchase_receipt_id</td><td>FK CASCADE</td><td></td></tr>
+  <tr><td>product_id, product_unit_id</td><td>FK RESTRICT</td><td></td></tr>
+  <tr><td>unit_factor, quantity, base_quantity</td><td>decimal</td><td>base_quantity increments stock</td></tr>
+</table>
+<p style="font-size:8.5pt;color:#5b6b7c"><strong>V2 migration path:</strong> drop the unique constraint on
+<code>purchase_receipts.purchase_id</code> and partial receiving works. No schema change, no data migration.</p>
+
+<h4>Inventory operations</h4>
+
+<p class="tbl-title"><span class="n">25</span>stock_adjustments &nbsp;&middot;&nbsp; stock_adjustment_items</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">stock_adjustments</td></tr>
+  <tr><td>reference_number</td><td>varchar(30) UNIQUE</td><td>ADJ-2026-00001</td></tr>
+  <tr><td>warehouse_id</td><td>FK warehouses RESTRICT</td><td></td></tr>
+  <tr><td>user_id</td><td>FK users RESTRICT</td><td></td></tr>
+  <tr><td>reason</td><td>varchar(255) NOT NULL</td><td><strong>Mandatory</strong></td></tr>
+  <tr><td>created_at</td><td>timestamp</td><td>Immutable</td></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">stock_adjustment_items</td></tr>
+  <tr><td>product_id, product_unit_id, unit_factor</td><td>FK / decimal</td><td></td></tr>
+  <tr><td>previous_quantity</td><td>decimal(12,3)</td><td rowspan="3">All in base units; difference is signed</td></tr>
+  <tr><td>new_quantity</td><td>decimal(12,3)</td></tr>
+  <tr><td>difference</td><td>decimal(12,3) signed</td></tr>
+</table>
+
+<p class="tbl-title"><span class="n">26</span>stock_transfers &nbsp;&middot;&nbsp; stock_transfer_items</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">stock_transfers</td></tr>
+  <tr><td>reference_number</td><td>varchar(30) UNIQUE</td><td>TR-2026-00001</td></tr>
+  <tr><td>from_warehouse_id</td><td>FK warehouses RESTRICT</td><td rowspan="2"><code>CHECK (from_warehouse_id &lt;&gt; to_warehouse_id)</code></td></tr>
+  <tr><td>to_warehouse_id</td><td>FK warehouses RESTRICT</td></tr>
+  <tr><td>user_id</td><td>FK users RESTRICT</td><td></td></tr>
+  <tr><td>created_at</td><td>timestamp</td><td>Immutable</td></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">stock_transfer_items</td></tr>
+  <tr><td>product_id, product_unit_id, unit_factor</td><td>FK / decimal</td><td></td></tr>
+  <tr><td>quantity, base_quantity</td><td>decimal(12,3)</td><td>Produces TRANSFER_OUT and TRANSFER_IN</td></tr>
+</table>
+
+<h4>Returns</h4>
+
+<p class="tbl-title"><span class="n">27</span>returns &nbsp;&middot;&nbsp; return_items &nbsp;&middot;&nbsp; refunds</p>
+<table class="schema">
+  <tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">returns</td></tr>
+  <tr><td>reference_number</td><td>varchar(30) UNIQUE</td><td>RET-2026-00001</td></tr>
+  <tr><td>sale_id</td><td>FK sales RESTRICT</td><td>Must be a CASH sale (C4)</td></tr>
+  <tr><td>sales_session_id</td><td>FK sales_sessions RESTRICT</td><td>Affects that session's reconciliation</td></tr>
+  <tr><td>user_id</td><td>FK users RESTRICT</td><td></td></tr>
+  <tr><td>reason</td><td>varchar(255) NOT NULL</td><td><strong>Mandatory</strong></td></tr>
+  <tr><td>total_amount</td><td>decimal(15,3)</td><td>Server-calculated</td></tr>
+  <tr><td>created_at</td><td>timestamp</td><td>No warehouse_id &mdash; derived from the sale (C6, 3NF)</td></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">return_items</td></tr>
+  <tr><td>return_id</td><td>FK returns CASCADE</td><td></td></tr>
+  <tr><td>sale_item_id</td><td>FK sale_items RESTRICT</td><td>Row locked while validating returnable quantity</td></tr>
+  <tr><td>product_id, product_unit_id, unit_factor</td><td>FK / decimal</td><td></td></tr>
+  <tr><td>quantity, base_quantity</td><td>decimal(12,3)</td><td></td></tr>
+  <tr><td>unit_price</td><td>decimal(15,3)</td><td>= the sale item's <code>net_unit_price</code></td></tr>
+  <tr><td>line_total</td><td>decimal(15,3)</td><td></td></tr>
+  <tr><td colspan="3" style="background:#eef2f5;font-weight:600">refunds</td></tr>
+  <tr><td>return_id</td><td>FK returns RESTRICT <strong>UNIQUE</strong></td><td>Enforces the 1:1 rule (C7)</td></tr>
+  <tr><td>amount</td><td>decimal(15,3)</td><td>Server-calculated; client cannot propose a value</td></tr>
+  <tr><td>method</td><td>enum CASH DEFAULT CASH</td><td>Column exists for V2 extensibility</td></tr>
+  <tr><td>user_id, sales_session_id</td><td>FK RESTRICT</td><td></td></tr>
+  <tr><td>created_at</td><td>timestamp</td><td>Immutable; every refund is audited</td></tr>
+</table>
+
+<!-- ============ 9 ============ -->
+<h2 class="page-break">9. Technical Architecture</h2>
+
+<h3>9.1 Stack</h3>
+<table>
+  <tr><th style="width:26%">Layer</th><th>Choice</th></tr>
+  <tr><td>Framework</td><td>Laravel 13, PHP 8.4</td></tr>
+  <tr><td>Presentation</td><td>Blade templates, Tailwind CSS 4, Alpine.js 3 &mdash; Arabic RTL</td></tr>
+  <tr><td>Typography</td><td>Cairo, self-hosted (no external CDN dependency at request time)</td></tr>
+  <tr><td>Database</td><td>MySQL 8.0 &mdash; required for enforced CHECK constraints and indexed generated columns</td></tr>
+  <tr><td>Business logic</td><td>Service classes owning transaction boundaries; controllers stay thin</td></tr>
+  <tr><td>Database user</td><td>Dedicated least-privilege account scoped to the application schema; never <code>root</code></td></tr>
+</table>
+
+<h3>9.2 Deployment</h3>
+<p>Warehouses are located in different cities, which rules out a LAN server and a per-branch installation. V1 is
+deployed as a <strong>single web application on an internet-accessible server</strong>, with all branches connecting by
+browser.</p>
+<div class="warn">
+<p><strong>Rejected: per-machine installation.</strong> A standalone install per terminal implies a database per
+terminal, which destroys every guarantee in this document &mdash; two cashiers would each sell the same last unit.
+Multi-user operation requires one shared database, without exception.</p>
+<p><strong>Rejected for V1: branch-local servers with synchronisation.</strong> Reconciling independent databases
+(conflicting edits, duplicated invoice numbers, divergent stock) is a larger engineering problem than this system
+itself.</p>
+</div>
+<p>Operational requirements: automated off-site daily backup; a clear, non-silent failure state when connectivity is
+lost &mdash; the application must never allow a sale it cannot record.</p>
+
+<h3>9.3 Concurrency</h3>
+<pre><code>DB::transaction(function () use ($warehouseId, $productId, $qty) {
+    $stock = WarehouseStock::query()
+        ->where('warehouse_id', $warehouseId)
+        ->where('product_id', $productId)
+        ->lockForUpdate()          // row lock held until commit
+        ->firstOrFail();
+
+    if ($stock->quantity &lt; $qty) {
+        throw new InsufficientStockException();
+    }
+
+    $stock->decrement('quantity', $qty);
+    // + stock movement, in the same transaction
+});</code></pre>
+<p>Rows are locked in a consistent order across all operations to avoid deadlocks. The same discipline applies to
+<code>sale_items.returned_quantity</code>, to <code>document_sequences</code>, and to both sides of a transfer.</p>
+
+<h3>9.4 Idempotency</h3>
+<p>Operations that a user may submit twice &mdash; create sale, receive purchase, execute refund &mdash; are protected by an
+idempotency key supplied with the request and enforced by a unique constraint, so a double submission produces one
+business record rather than two.</p>
+
+<h3>9.5 Data integrity summary</h3>
+<table>
+  <tr><th style="width:46%">Invariant</th><th>Enforcement</th></tr>
+  <tr><td>Stock never negative</td><td><code>unsigned</code> + <code>CHECK</code> + application validation</td></tr>
+  <tr><td>One open session per employee</td><td>Generated column + unique index</td></tr>
+  <tr><td>Exactly one base unit per product</td><td>Generated column + unique index</td></tr>
+  <tr><td>One receipt per purchase (V1)</td><td>Unique constraint</td></tr>
+  <tr><td>One refund per return</td><td>Unique constraint</td></tr>
+  <tr><td>Transfer source ≠ destination</td><td><code>CHECK</code> constraint</td></tr>
+  <tr><td>One stock row per product per warehouse</td><td>Composite unique constraint</td></tr>
+  <tr><td>Unique invoice numbers under load</td><td>Locked sequence row inside the transaction</td></tr>
+  <tr><td>No orphaned historical references</td><td><code>RESTRICT</code> foreign keys + status-based deactivation</td></tr>
+</table>
+
+<!-- ============ 10 ============ -->
+<h2>10. Security Requirements</h2>
+
+<table>
+  <tr><th style="width:30%">Area</th><th>Requirement</th></tr>
+  <tr><td>Password storage</td><td>Hashed with bcrypt or argon2 &mdash; deliberately slow, salted. Never stored or logged in plain text.</td></tr>
+  <tr><td>Invitation tokens</td><td>Cryptographically random, transmitted once in the invitation link, stored only as a SHA-256 hash. A database leak must not permit account activation. Compared in constant time.</td></tr>
+  <tr><td>Authorisation</td><td>Enforced server-side on every protected operation. Client-side permission state is presentational only.</td></tr>
+  <tr><td>Session resolution</td><td>The active sales session is always derived from the authenticated user; a session id supplied by the client is never trusted.</td></tr>
+  <tr><td>Monetary calculation</td><td>Totals, discounts, taxes and refund amounts are computed server-side from stored data only.</td></tr>
+  <tr><td>Database access</td><td>The application connects as a least-privilege user limited to its own schema.</td></tr>
+  <tr><td>Audit coverage</td><td>Role changes, account status changes, stock adjustments, transfers, returns, refunds and critical setting changes.</td></tr>
+  <tr><td>Secrets</td><td>Credentials live in the environment file, excluded from version control. No credential is ever committed.</td></tr>
+</table>
+
+<!-- ============ 11 ============ -->
+<h2>11. Out of Scope &mdash; V2 Roadmap</h2>
+<table>
+  <tr><th style="width:38%">Feature</th><th>Notes on V1 readiness</th></tr>
+  <tr><td>Partial goods receiving</td><td>Remove one unique constraint; structure already supports it</td></tr>
+  <tr><td>Non-cash refunds</td><td><code>refunds.method</code> already exists as an enum</td></tr>
+  <tr><td>Product variants</td><td>Would introduce a variant layer above products; deliberately avoided in V1</td></tr>
+  <tr><td>Delivery representatives, customer accounts and portal</td><td>Requires customer authentication and an API layer over the existing services</td></tr>
+  <tr><td>Order and delivery tracking, real-time status</td><td>Requires WebSocket infrastructure</td></tr>
+  <tr><td>Online payment gateways</td><td>Requires payment records beyond the single method field</td></tr>
+  <tr><td>Multi-tenancy</td><td>Would require tenant scoping across every query, index and constraint</td></tr>
+  <tr><td>Line-level discounts</td><td>Line already carries <code>discount_share</code> and <code>net_unit_price</code></td></tr>
+</table>
+
+<!-- ============ APPENDIX A ============ -->
+<h2 class="page-break">Appendix A &mdash; Permission Catalogue</h2>
+<p>Permissions are seeded system constants. They are never created, edited or deleted through the interface.</p>
+
+<div class="two-col">
+<div>
+<pre><code>USERS
+  users.view          users.create
+  users.update        users.disable
+
+ROLES
+  roles.view          roles.create
+  roles.update        roles.delete
+
+CATALOG
+  products.view       products.create
+  products.update     products.deactivate
+  categories.manage   brands.manage
+
+PARTNERS
+  suppliers.view      suppliers.create
+  suppliers.update    suppliers.deactivate
+  customers.view      customers.create
+  customers.update    customers.deactivate
+
+WAREHOUSES
+  warehouses.view     warehouses.create
+  warehouses.update   warehouses.deactivate</code></pre>
+</div>
+<div>
+<pre><code>INVENTORY
+  inventory.view      inventory.adjust
+  inventory.transfer  stock_movements.view
+
+PURCHASING
+  purchases.view      purchases.create
+  purchases.confirm   purchases.receive
+
+SELLING
+  sessions.start      sessions.close
+  sessions.view_all
+  sales.create        sales.view_own
+  sales.view_all
+  returns.create      returns.view_own
+  returns.view_all
+
+REPORTS
+  reports.sales       reports.purchases
+  reports.inventory   reports.profit
+  reports.movements
+
+GOVERNANCE
+  settings.view       settings.update
+  audit.view</code></pre>
+</div>
+</div>
+
+<!-- ============ APPENDIX B ============ -->
+<h2>Appendix B &mdash; Role / Permission Matrix</h2>
+<table>
+  <tr>
+    <th style="width:34%">Permission group</th>
+    <th style="width:12%">Admin</th><th style="width:14%">Manager</th>
+    <th style="width:18%">Sales Employee</th><th>Warehouse Employee</th>
+  </tr>
+  <tr><td>Users, roles</td><td>Full</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+  <tr><td>Settings, audit log</td><td>Full</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+  <tr><td>Products, categories, brands</td><td>Full</td><td>Full</td><td>View</td><td>View</td></tr>
+  <tr><td>Suppliers</td><td>Full</td><td>Full</td><td>&mdash;</td><td>View</td></tr>
+  <tr><td>Customers</td><td>Full</td><td>Full</td><td>View, create, update</td><td>&mdash;</td></tr>
+  <tr><td>Warehouses</td><td>Full</td><td>Full</td><td>&mdash;</td><td>View</td></tr>
+  <tr><td>Inventory view, movements</td><td>Full</td><td>View</td><td>View</td><td>View</td></tr>
+  <tr><td>Adjust, transfer stock</td><td>Full</td><td><strong>&mdash;</strong></td><td>&mdash;</td><td>Full</td></tr>
+  <tr><td>Purchase orders</td><td>Full</td><td>Create, confirm</td><td>&mdash;</td><td>View</td></tr>
+  <tr><td>Receive goods</td><td>Full</td><td><strong>&mdash;</strong></td><td>&mdash;</td><td>Full</td></tr>
+  <tr><td>Sales sessions</td><td>View all</td><td>View all</td><td>Own: start, close</td><td>&mdash;</td></tr>
+  <tr><td>Create sales</td><td>Full</td><td><strong>&mdash;</strong></td><td>Full</td><td>&mdash;</td></tr>
+  <tr><td>View sales</td><td>All</td><td>All</td><td>Own only</td><td>&mdash;</td></tr>
+  <tr><td>Returns and refunds</td><td>Full</td><td>View all</td><td>Create, view own</td><td>&mdash;</td></tr>
+  <tr><td>Reports</td><td>All</td><td>All</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<p style="font-size:8.5pt;color:#5b6b7c">Bold dashes mark the separation-of-duties boundaries described in §3.</p>
+
+<!-- ============ APPENDIX C ============ -->
+<h2>Appendix C &mdash; Decision Log</h2>
+<table>
+  <tr><th style="width:6%">#</th><th style="width:30%">Question</th><th>Decision</th></tr>
+  <tr><td>C1</td><td>Session bound to a warehouse?</td><td>No. Session belongs to the user; each sale carries its warehouse. BR-SESSION-05/06/07/08 cancelled</td></tr>
+  <tr><td>C2</td><td>GraphQL + Vue, or Blade?</td><td>Blade + Tailwind + Alpine.js. No GraphQL, no Vue in V1</td></tr>
+  <tr><td>C3</td><td>Purchase table structure</td><td>Four tables: order and receipt separated</td></tr>
+  <tr><td>C4</td><td>Payment methods</td><td>CASH / CARD / TRANSFER; returns allowed only on CASH sales</td></tr>
+  <tr><td>C5</td><td>Opening cash float</td><td>Added; entered by the employee at session start</td></tr>
+  <tr><td>C6</td><td>Warehouse receiving returned stock</td><td>The original sale's warehouse, always</td></tr>
+  <tr><td>C7</td><td>Return granularity</td><td>Multi-item return; exactly one refund per return</td></tr>
+  <tr><td>C8</td><td>Roles per user</td><td>One. <code>users.role_id</code>; <code>role_user</code> cancelled</td></tr>
+  <tr><td>D1</td><td>Missing tables</td><td>Added categories, brands, audit_logs, settings, user_invitations, document_sequences, product_units</td></tr>
+  <tr><td>D2</td><td>User-to-warehouse assignment</td><td>Rejected. <code>warehouses.supervisor_id</code> is informational only</td></tr>
+  <tr><td>D3</td><td>Negative stock</td><td>Never permitted, by any operation</td></tr>
+  <tr><td>D4</td><td>Invoice identity</td><td>Column on <code>sales</code>, issued from a locked sequence</td></tr>
+  <tr><td>D5</td><td>Money precision</td><td><code>decimal(15,3)</code> &mdash; Libyan Dinar</td></tr>
+  <tr><td>D6</td><td>Profit basis</td><td><code>sale_items.unit_cost</code> frozen at sale time</td></tr>
+  <tr><td>D7</td><td>Tax</td><td>Present, <code>NOT NULL DEFAULT 0</code></td></tr>
+  <tr><td>D8</td><td>Discounts</td><td>Invoice-level percentage; refunds use post-discount price</td></tr>
+  <tr><td>D9</td><td>Interface language</td><td>Arabic RTL; SKUs and numerals Latin</td></tr>
+  <tr><td>D10</td><td>Deletion</td><td><code>status</code> column; SoftDeletes rejected</td></tr>
+  <tr><td>D11</td><td>Units of measure</td><td>Multi-unit with frozen conversion factors and per-unit prices</td></tr>
+  <tr><td>D12</td><td>Quantity type</td><td><code>decimal(12,3)</code></td></tr>
+  <tr><td>D13</td><td>Category hierarchy</td><td>Flat</td></tr>
+  <tr><td>D14</td><td>Walk-in sales</td><td>Permitted; <code>customer_id</code> nullable</td></tr>
+  <tr><td>D15</td><td>Purchase cancellation</td><td><code>cancelled</code> status added</td></tr>
+  <tr><td>D16</td><td>Deployment</td><td>Single internet-hosted web application; branches span cities</td></tr>
+  <tr><td>D17</td><td>Movement balance</td><td><code>balance_after</code> stored on every movement</td></tr>
+</table>
+
+<footer class="doc-end">
+  Mizan &mdash; Product Requirements Document V1 &middot; Design Baseline &middot; 13 September 2026<br>
+  This document supersedes all earlier requirements, use-case and ERD papers.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mizan — Product Requirements Document V1.1</title>
+<style>
+  @page { size: A4; margin: 17mm 15mm 17mm 15mm; }
+  :root { --ink:#1a2430; --muted:#5b6b7c; --line:#d6dee6; --brand:#0f766e; --brand-light:#e6f4f1; --warn:#b45309; --warn-light:#fef6e7; --code-bg:#f5f7f9; --new:#15803d; --new-bg:#dcfce7; }
+  * { box-sizing: border-box; }
+  body { font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif; font-size:9.5pt; line-height:1.55; color:var(--ink); margin:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  h1,h2,h3,h4 { color:var(--ink); line-height:1.25; margin:0; }
+  h1 { font-size:20pt; font-weight:700; }
+  h2 { font-size:13pt; font-weight:700; margin:22px 0 9px; padding-bottom:5px; border-bottom:2px solid var(--brand); break-after:avoid; }
+  h3 { font-size:10.8pt; font-weight:700; margin:15px 0 6px; color:var(--brand); break-after:avoid; }
+  h4 { font-size:10pt; font-weight:700; margin:16px 0 4px; padding:4px 8px; background:var(--brand-light); border-left:3px solid var(--brand); break-after:avoid; }
+  p { margin:0 0 7px; }
+  ul,ol { margin:0 0 8px; padding-left:17px; }
+  li { margin-bottom:2.5px; }
+  code { font-family:"Cascadia Mono",Consolas,"Courier New",monospace; font-size:8.3pt; background:var(--code-bg); padding:1px 3px; border-radius:2px; }
+  pre { font-family:"Cascadia Mono",Consolas,"Courier New",monospace; font-size:7.9pt; background:var(--code-bg); border:1px solid var(--line); border-left:3px solid var(--brand); padding:7px 9px; margin:7px 0 10px; white-space:pre; overflow:hidden; line-height:1.42; break-inside:avoid; }
+  pre code { background:none; padding:0; font-size:inherit; }
+  table { width:100%; border-collapse:collapse; font-size:8.4pt; margin:7px 0 12px; }
+  th { background:var(--brand); color:#fff; text-align:left; font-weight:600; padding:5px 7px; border:1px solid var(--brand); font-size:8.2pt; }
+  td { padding:4px 7px; border:1px solid var(--line); vertical-align:top; }
+  tbody tr:nth-child(even) { background:#f8fafb; }
+  tr { break-inside:avoid; }
+  .cover { height:250mm; display:flex; flex-direction:column; justify-content:center; text-align:center; break-after:page; }
+  .cover .logo { font-size:42pt; font-weight:800; color:var(--brand); letter-spacing:-1.5px; margin-bottom:4px; }
+  .cover .ar { font-size:26pt; color:var(--brand); margin-bottom:22px; font-weight:600; }
+  .cover .subject { font-size:15pt; font-weight:600; margin-bottom:6px; }
+  .cover .tagline { font-size:10.5pt; color:var(--muted); margin-bottom:30px; }
+  .cover table { width:76%; margin:0 auto; font-size:9.3pt; }
+  .cover th { width:36%; }
+  .note,.warn,.rule { padding:8px 11px; margin:9px 0 11px; font-size:8.9pt; break-inside:avoid; }
+  .note { background:var(--brand-light); border-left:3px solid var(--brand); }
+  .warn { background:var(--warn-light); border-left:3px solid var(--warn); }
+  .rule { background:#f5f7f9; border-left:3px solid var(--muted); }
+  .note p:last-child,.warn p:last-child,.rule p:last-child { margin-bottom:0; }
+  .page-break { break-before:page; }
+  .toc ol { list-style:none; padding-left:0; counter-reset:s; }
+  .toc > ol > li { counter-increment:s; padding:3px 0; border-bottom:1px dotted var(--line); font-weight:600; font-size:9.4pt; }
+  .toc > ol > li::before { content:counter(s) ". "; color:var(--brand); }
+  .toc > ol > li.app::before { content:""; }
+  .toc ul { list-style:none; padding-left:16px; font-weight:400; color:var(--muted); font-size:8.7pt; }
+  .tag { display:inline-block; font-size:7.3pt; font-weight:700; padding:1px 5px; border-radius:3px; letter-spacing:.3px; vertical-align:1px; }
+  .t-new { background:var(--new-bg); color:var(--new); }
+  .t-chg { background:#fef3c7; color:#b45309; }
+  .t-kill { background:#fee2e2; color:#b91c1c; }
+  .t-svc { background:#e0e7ff; color:#3730a3; }
+  .tbl-title { background:var(--ink); color:#fff; font-family:"Cascadia Mono",Consolas,monospace; font-size:9pt; font-weight:700; padding:5px 9px; margin:13px 0 0; break-after:avoid; }
+  .tbl-title .n { color:#7dd3c0; font-weight:400; margin-right:6px; }
+  .tbl-purpose { font-size:8.6pt; color:var(--muted); margin:4px 0 0; break-after:avoid; }
+  table.schema { font-size:7.9pt; margin:4px 0 0; }
+  table.schema th { font-size:7.8pt; padding:3px 6px; }
+  table.schema td { padding:2.5px 6px; }
+  table.schema td:nth-child(1), table.schema td:nth-child(2), table.schema td:nth-child(3) { font-family:"Cascadia Mono",Consolas,monospace; font-size:7.5pt; }
+  table.schema th:nth-child(1) { width:19%; } table.schema th:nth-child(2) { width:23%; } table.schema th:nth-child(3) { width:17%; }
+  table.constraints { font-size:7.5pt; margin:0 0 10px; }
+  table.constraints td { padding:2px 6px; font-family:"Cascadia Mono",Consolas,monospace; background:#fbfcfd; }
+  table.constraints td:first-child { width:19%; color:var(--brand); font-weight:600; font-family:"Segoe UI",Arial,sans-serif; }
+  .two-col { display:flex; gap:14px; } .two-col > div { flex:1; }
+  footer.doc-end { margin-top:26px; padding-top:9px; border-top:1px solid var(--line); font-size:8pt; color:var(--muted); text-align:center; }
+</style>
+</head>
+<body>
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <div class="logo">MIZAN</div>
+  <div class="ar">ميزان</div>
+  <div class="subject">Product Requirements Document</div>
+  <div class="tagline">Internal Business Management &amp; Inventory System &mdash; Version 1.1</div>
+  <table>
+    <tr><th>Document version</th><td>1.1 &mdash; Implemented schema baseline</td></tr>
+    <tr><th>Status</th><td>Database schema, models and seed data implemented and verified</td></tr>
+    <tr><th>Date</th><td>16 September 2026</td></tr>
+    <tr><th>Product owner</th><td>Ayob Milad</td></tr>
+    <tr><th>Technology</th><td>Laravel 13.31 &middot; PHP 8.4 &middot; MySQL 8.4 &middot; Blade &middot; Tailwind 4 &middot; Alpine.js 3</td></tr>
+    <tr><th>Supersedes</th><td>PRD V1.0 (13 Sep 2026)</td></tr>
+  </table>
+</div>
+
+<!-- ================= REVISION HISTORY + TOC ================= -->
+<h1>Revision history</h1>
+<table>
+  <tr><th style="width:11%">Version</th><th style="width:17%">Date</th><th>Summary</th></tr>
+  <tr><td>1.0</td><td>13 Sep 2026</td><td>Consolidated requirements, use cases and ERD decisions. Resolved eight conflicts between the source papers. Design baseline.</td></tr>
+  <tr><td><strong>1.1</strong></td><td><strong>16 Sep 2026</strong></td><td>Every decision taken while implementing the database: authentication hardening, multi-unit integrity, money rounding policy, cash-only returns enforced in the database, immutable history, atomic document numbering. Section 8 is now generated directly from the live schema. Full change list in Appendix D.</td></tr>
+</table>
+
+<h1 style="margin-top:22px">Contents</h1>
+<div class="toc">
+<ol>
+  <li>Purpose and Document Authority</li>
+  <li>System Overview and Scope</li>
+  <li>Actors and Responsibilities</li>
+  <li>Global Business Rules</li>
+  <li>Resolved Design Conflicts (C1&ndash;C8)</li>
+  <li>Supplementary Design Decisions</li>
+  <li>Functional Requirements</li>
+  <li>Data Model <ul><li>Integrity architecture &middot; Database-enforced invariants &middot; Service-enforced rules &middot; Schema reference (31 tables)</li></ul></li>
+  <li>Technical Architecture and Implementation Status</li>
+  <li>Security Requirements</li>
+  <li>Out of Scope &mdash; V2 Roadmap</li>
+  <li class="app">Appendix A &mdash; Permission Catalogue</li>
+  <li class="app">Appendix B &mdash; Role / Permission Matrix</li>
+  <li class="app">Appendix C &mdash; Decision Register</li>
+  <li class="app">Appendix D &mdash; Change Log V1.0 &rarr; V1.1</li>
+  <li class="app">Appendix E &mdash; Open Items</li>
+</ol>
+</div>
+
+<!-- ================= 1 ================= -->
+<h2 class="page-break">1. Purpose and Document Authority</h2>
+<p>This document is the single authoritative specification for <strong>Mizan V1</strong>. Version 1.1 records the decisions
+taken while the database was implemented and verified against MySQL. Where it differs from V1.0 or any earlier paper,
+<strong>this document governs</strong>.</p>
+<div class="note">
+<p><strong>Schema accuracy.</strong> The schema reference in section 8.5 is generated from the running database
+(<code>information_schema</code>), not written by hand. Column types, keys and constraints in this document are therefore
+exactly what is deployed.</p>
+</div>
+
+<h3>1.1 Design philosophy</h3>
+<table>
+  <tr><th style="width:22%">Property</th><th>What it demands of the implementation</th></tr>
+  <tr><td>Transactional integrity</td><td>Every business operation that touches more than one row succeeds completely or not at all.</td></tr>
+  <tr><td>Inventory traceability</td><td>No quantity ever changes without a stock movement recording the cause.</td></tr>
+  <tr><td>Concurrency safety</td><td>Correctness is guaranteed by database locks and constraints, never by application checks alone.</td></tr>
+  <tr><td>Auditability</td><td>Sensitive actions answer: who, what, when, where, which record, what changed, why.</td></tr>
+  <tr><td>Accountability</td><td>Every operation carries the identity of the employee who performed it.</td></tr>
+  <tr><td>Historical integrity</td><td>Completed transactions are immutable. Corrections are new operations, never edits.</td></tr>
+  <tr><td>Defence in depth <span class="tag t-new">V1.1</span></td><td>A business rule that the database can express is enforced there as well as in code, so a programming error cannot corrupt financial or inventory data.</td></tr>
+</table>
+
+<!-- ================= 2 ================= -->
+<h2>2. System Overview and Scope</h2>
+<p>Mizan is an internal business management and inventory system for a retail business with warehouses in several
+cities. V1 serves one company and is not multi-tenant.</p>
+<h3>2.1 In scope</h3>
+<table>
+  <tr><th style="width:24%">Domain</th><th>Capabilities</th></tr>
+  <tr><td>Identity</td><td>Authentication, invitation-based onboarding, roles, permissions</td></tr>
+  <tr><td>Master data</td><td>Products, product units, categories, brands, warehouses, customers, suppliers</td></tr>
+  <tr><td>Inventory</td><td>Per-warehouse balances, stock movements, adjustments, inter-warehouse transfers</td></tr>
+  <tr><td>Purchasing</td><td>Purchase orders, confirmation, cancellation, goods receiving</td></tr>
+  <tr><td>Selling</td><td>Sales sessions, invoices, multi-warehouse selling, walk-in customers, invoice-level discount, tax</td></tr>
+  <tr><td>Returns</td><td>Multi-item returns against cash sales, cash refunds, reconciliation impact</td></tr>
+  <tr><td>Oversight</td><td>Reports, audit log, system settings</td></tr>
+</table>
+<h3>2.2 Out of scope for V1</h3>
+<p>Delivery representatives; customer accounts and portal; order and delivery tracking; real-time status; customer chat;
+WebSocket infrastructure; online payment gateways; product variants; multi-tenancy; partial goods receiving; line-level
+discounts; returns of card or transfer sales; returning a different unit than the one sold.</p>
+
+<!-- ================= 3 ================= -->
+<h2>3. Actors and Responsibilities</h2>
+<table>
+  <tr><th style="width:17%">Actor</th><th style="width:43%">Can do</th><th>Cannot do</th></tr>
+  <tr><td><strong>Admin</strong><br><span style="color:#5b6b7c">51 permissions</span></td><td>Everything, including employees, roles, permissions, settings and the audit log.</td><td>&mdash;</td></tr>
+  <tr><td><strong>Manager</strong><br><span style="color:#5b6b7c">31 permissions</span></td><td>Products, categories, brands, suppliers, customers, warehouses. Create and confirm purchase orders. View inventory, movements, all sessions, sales, returns and all reports.</td><td>Users, roles, settings, audit log. Create sales or returns. Adjust or transfer stock. Receive goods.</td></tr>
+  <tr><td><strong>Sales Employee</strong><br><span style="color:#5b6b7c">11 permissions</span></td><td>Start and close own session, sell from any warehouse, create and edit customers, view own sales and returns, execute returns and cash refunds, view products and stock.</td><td>View other employees' sales. Modify completed sales. Deactivate customers. Inventory operations.</td></tr>
+  <tr><td><strong>Warehouse Employee</strong><br><span style="color:#5b6b7c">9 permissions</span></td><td>View inventory, movements, products, suppliers and warehouses. Receive purchases, adjust stock, transfer stock.</td><td>Create sales. Manage users, roles or permissions.</td></tr>
+  <tr><td><strong>Customer</strong></td><td>A business entity associated with sales.</td><td>No login, password, role or dashboard in V1.</td></tr>
+</table>
+<div class="note"><p><strong>Separation of duties.</strong> The Manager reviews but does not execute. A business that needs one person to do both creates a new named role holding both permission sets: an explicit, audited decision rather than a weakening of the defaults.</p></div>
+
+<!-- ================= 4 ================= -->
+<h2>4. Global Business Rules</h2>
+<table>
+  <tr><th style="width:16%">ID</th><th>Rule</th></tr>
+  <tr><td><strong>BR-GLOBAL-01</strong></td><td>Users must be authenticated before any protected operation.</td></tr>
+  <tr><td><strong>BR-GLOBAL-02</strong></td><td>Every protected operation is authorised on the backend against the user's role permissions.</td></tr>
+  <tr><td><strong>BR-GLOBAL-03</strong></td><td>The backend calculates and validates prices, totals, taxes, discounts, stock, warehouse access, the active session, refund amounts and permissions. None of these is trusted from the client.</td></tr>
+  <tr><td><strong>BR-GLOBAL-04</strong></td><td>Records with history are never hard-deleted; a <code>status</code> column deactivates them. Soft deletes are not used. Foreign keys default to <code>RESTRICT</code>.</td></tr>
+  <tr><td><strong>BR-GLOBAL-05</strong></td><td>Operations changing several related records run in one database transaction.</td></tr>
+  <tr><td><strong>BR-GLOBAL-06</strong></td><td>Sensitive and inventory operations are recorded in the audit log.</td></tr>
+  <tr><td><strong>BR-GLOBAL-07</strong></td><td>Stock can never become negative by any operation, including adjustment. Enforced by <code>CHECK</code> and by application validation.</td></tr>
+  <tr><td><strong>BR-GLOBAL-08</strong></td><td>Rows in a read-check-write sequence are locked with <code>SELECT … FOR UPDATE</code> until commit.</td></tr>
+  <tr><td><strong>BR-GLOBAL-09</strong> <span class="tag t-new">V1.1</span></td><td>Money is rounded half away from zero to 3 decimals. PHP <code>bcround(…, 3, HalfAwayFromZero)</code> and MySQL <code>ROUND(…, 3)</code> were verified to agree. Base-unit quantities are truncated to 3 decimals: PHP <code>bcmul</code> and MySQL <code>TRUNCATE</code> agree. Floating point is never used for money or quantities.</td></tr>
+  <tr><td><strong>BR-GLOBAL-10</strong> <span class="tag t-new">V1.1</span></td><td>Completed documents (sales, sale lines, returns, return lines, refunds, receipts, adjustments, transfers, stock movements, audit entries) cannot be updated or deleted through the application. The only exception is the returned-quantity counter on a sale line.</td></tr>
+  <tr><td><strong>BR-GLOBAL-11</strong> <span class="tag t-new">V1.1</span></td><td>Operations that a double click could duplicate carry an idempotency key under a unique constraint: sales, returns, stock adjustments and stock transfers. Purchase receipts are protected by one-receipt-per-order.</td></tr>
+</table>
+
+<!-- ================= 5 ================= -->
+<h2 class="page-break">5. Resolved Design Conflicts</h2>
+<p>These eight decisions from V1.0 stand. V1.1 adds how each is enforced. <span class="tag t-kill">CANCELLED</span> rules must not be reintroduced.</p>
+<table>
+  <tr><th style="width:6%">#</th><th style="width:27%">Conflict</th><th style="width:34%">Decision</th><th>Enforcement in V1.1</th></tr>
+  <tr><td>C1</td><td>Is a sales session tied to one warehouse?</td><td>No. The session belongs to the employee; each sale records its own warehouse. <span class="tag t-kill">CANCELLED</span> BR-SESSION-05/06/07/08.</td><td><code>sales_sessions</code> has no warehouse column; <code>sales.warehouse_id</code> is mandatory.</td></tr>
+  <tr><td>C2</td><td>GraphQL + Vue, or Blade?</td><td>Blade + Tailwind + Alpine.js. No GraphQL, no Vue in V1.</td><td>Implemented (Laravel 13, Tailwind 4, Alpine 3).</td></tr>
+  <tr><td>C3</td><td>Purchase tables</td><td>Order and receipt are separate: four tables.</td><td>One receipt per order by unique index. Receipt lines reference order lines.</td></tr>
+  <tr><td>C4</td><td>Payment methods and returns</td><td>cash / card / transfer. Returns only on cash sales.</td><td>Enforced in the database by a composite foreign key and a CHECK (&sect;8.2).</td></tr>
+  <tr><td>C5</td><td>Opening cash float</td><td>Entered by the employee at session start.</td><td><code>expected = float + cash sales − cash refunds</code>; closing requires <code>difference = actual − expected</code>.</td></tr>
+  <tr><td>C6</td><td>Where does returned stock go?</td><td>Always to the original sale's warehouse.</td><td>No warehouse column on returns; it is derived from the sale.</td></tr>
+  <tr><td>C7</td><td>Return structure</td><td>Multi-item return, exactly one refund per return.</td><td>Unique <code>refunds.return_id</code>; refund amount must equal the return total.</td></tr>
+  <tr><td>C8</td><td>Roles per user</td><td>One role per user. <span class="tag t-kill">CANCELLED</span> <code>role_user</code>.</td><td><code>users.role_id</code>; role in use cannot be deleted (RESTRICT).</td></tr>
+</table>
+
+<!-- ================= 6 ================= -->
+<h2>6. Supplementary Design Decisions</h2>
+
+<h3>6.1 Multi-unit products</h3>
+<p>Goods are bought wholesale and sold retail. Each product has units (piece, dozen, carton) with a conversion factor and
+explicit per-unit prices; a carton is not priced by multiplying the piece price.</p>
+<div class="rule"><p><strong>Governing rule.</strong> Stock and stock movements are always in the <strong>base unit</strong>. Every transaction line freezes <code>unit_factor</code> and stores <code>base_quantity = TRUNCATE(quantity × unit_factor, 3)</code>.</p></div>
+<ul>
+  <li>Exactly one base unit per product, whose factor must be 1 (generated column + unique index + CHECK).</li>
+  <li><span class="tag t-new">V1.1</span> A line's unit must belong to the line's product: composite foreign key <code>(product_unit_id, product_id) → product_units(id, product_id)</code> on purchase, transfer and sale lines.</li>
+  <li><span class="tag t-new">V1.1</span> Adjustment lines hold balances only and are always in base units; the unit a clerk counted in is converted by the screen before saving.</li>
+  <li><span class="tag t-new">V1.1</span> Returns are expressed in the unit that was sold.</li>
+</ul>
+<pre><code>2 cartons sold, factor 24     base_quantity = 48    stock decreases by 48 pieces
+profit = line_total − (base_quantity × unit_cost per base unit)</code></pre>
+
+<h3>6.2 Discounts, tax and line amounts</h3>
+<ul>
+  <li>Discount is a percentage on the whole invoice, default 0. Percentage and amount are both stored.</li>
+  <li><span class="tag t-new">V1.1</span> <code>tax_rate</code> is frozen on each sale, so later setting changes never alter the meaning of old invoices. Tax is applied <strong>after</strong> the discount.</li>
+  <li>The discount is distributed across lines. Each line stores its <code>discount_share</code>, its <code>line_total</code> and its <code>net_unit_price</code>.</li>
+  <li>Refunds use the net (post-discount) price: a piece sold at 1000 with a 20% invoice discount refunds 800.</li>
+</ul>
+<pre><code>discount_amount = ROUND(subtotal × discount_percent / 100, 3)
+tax_amount      = ROUND((subtotal − discount_amount) × tax_rate / 100, 3)
+total           = subtotal − discount_amount + tax_amount
+line_total      = ROUND(quantity × unit_price, 3) − discount_share
+net_unit_price  = ROUND(line_total / quantity, 3)</code></pre>
+<p>All five formulas are CHECK constraints in the database.</p>
+
+<h3>6.3 Precision</h3>
+<table>
+  <tr><th style="width:30%">Concern</th><th>Decision</th></tr>
+  <tr><td>Money</td><td><code>decimal(15,3)</code> (Libyan dinar has three decimal places)</td></tr>
+  <tr><td>Quantities</td><td><code>decimal(12,3)</code>; conversion factors <code>decimal(12,4)</code>; rates <code>decimal(5,2)</code></td></tr>
+  <tr><td>Rounding</td><td>See BR-GLOBAL-09</td></tr>
+  <tr><td>Non-negative values</td><td><code>CHECK</code> constraints. <span class="tag t-chg">CHANGED</span> V1.0 said <code>unsigned</code>; MySQL 8 deprecated unsigned decimals and Laravel 13 removed <code>unsignedDecimal()</code>.</td></tr>
+</table>
+
+<h3>6.4 Warehouse access</h3>
+<p>No user-to-warehouse table. A sales employee sells from whichever warehouse holds stock. <code>warehouses.supervisor_id</code> is informational, not an access restriction. The warehouse list on the sales screen belongs to <code>sales.create</code>, not <code>warehouses.view</code>.</p>
+
+<h3>6.5 Document numbering <span class="tag t-chg">UPDATED</span></h3>
+<p>References <code>INV</code>, <code>PO</code>, <code>ADJ</code>, <code>TR</code>, <code>RET</code> are issued per year from <code>document_sequences</code>. <code>DocumentSequence::next()</code> performs one atomic statement:</p>
+<pre><code>INSERT INTO document_sequences (document_type, year, last_number) VALUES (?, ?, LAST_INSERT_ID(1))
+ON DUPLICATE KEY UPDATE last_number = LAST_INSERT_ID(last_number + 1)</code></pre>
+<p>Called inside the document's transaction, a rollback releases the number. Verified with two concurrent processes issuing 80 numbers: no duplicates, no gaps. Format <code>PREFIX-YYYY-NNNNN</code>; the invoice prefix comes from settings.</p>
+
+<h3>6.6 Categories, customers, deletion</h3>
+<ul>
+  <li>Categories are flat.</li>
+  <li><code>sales.customer_id</code> is nullable (walk-in sales). A customer's phone is unique when provided.</li>
+  <li>Deactivation uses <code>status</code> (<code>active</code> / <code>inactive</code>). SoftDeletes are rejected: they hide rows silently, and a hidden product may still have stock on a shelf.</li>
+</ul>
+
+<h3>6.7 Authentication and sessions <span class="tag t-new">V1.1</span></h3>
+<ul>
+  <li><strong>"Remember me" is removed.</strong> Terminals are shared; a remembered login would record one employee's sales under another's name. The <code>remember_token</code> column does not exist and the User model disables the feature.</li>
+  <li><strong>The login session ends when the browser closes</strong> (<code>SESSION_EXPIRE_ON_CLOSE=true</code>), with 120 minutes idle lifetime.</li>
+  <li><strong>Invitations are valid for 24 hours</strong>, single use, stored as a SHA-256 hash.</li>
+  <li><strong>The first admin</strong> is created by an interactive seeder that asks for the password with hidden input (at least 12 characters, letters and numbers). The password is never written to a file.</li>
+  <li>Pending: force a password change on first login when the deploying developer set the admin password (Appendix E).</li>
+</ul>
+
+<h3>6.8 Time zone <span class="tag t-new">V1.1</span></h3>
+<p>Application time zone <code>Africa/Tripoli</code>; MySQL session time zone <code>+02:00</code> (a numeric offset works without MySQL time-zone tables, and Libya has had no daylight saving since 2013). This keeps database defaults and application timestamps identical and prevents invoices near midnight on 31 December from taking the wrong year.</p>
+
+<h3>6.9 Language</h3>
+<p>Arabic, right-to-left interface with Arabic data entry. SKUs, document references and numerals stay Latin, rendered with directional isolation and tabular figures.</p>
+
+<!-- ================= 7 ================= -->
+<h2 class="page-break">7. Functional Requirements</h2>
+
+<h3>7.1 Employee onboarding</h3>
+<pre><code>admin creates account (status pending, no password) → invitation issued (24 h, hashed token)
+→ employee opens link → sets own password → status active</code></pre>
+<p>The admin never sets an employee's password. Employees are disabled, never deleted.</p>
+
+<h3>7.2 Roles and permissions</h3>
+<p>51 system permissions in 11 modules (Appendix A). Roles are configurable; a role in use or a system role cannot be deleted. Re-running the seeders never overwrites role permissions an admin has customised; only the admin role is re-synchronised to hold every permission.</p>
+
+<h3>7.3 Products and units</h3>
+<p>SKU required and unique. Creating a product never creates stock. Inactive products and inactive units cannot be sold. Price changes never alter historical lines. Stock level: <strong>out</strong> at 0 (red), <strong>low</strong> at or below <code>reorder_level</code> (yellow), otherwise <strong>available</strong>.</p>
+
+<h3>7.4 Create sale</h3>
+<pre><code>authenticated employee + idempotency key from the form
+ → resolve the employee's OPEN session (never trust a client session id)     [service]
+ → validate warehouse, products and units active, quantities > 0             [service]
+ → BEGIN
+     lock warehouse_stocks rows in a consistent order                       [service]
+     verify stock in base units                                              [service + CHECK]
+     compute discount distribution, tax, totals, net prices                  [service + CHECKs]
+     issue invoice number                                                    DocumentSequence::next
+     insert sale and lines (session must belong to the employee)             [composite FK]
+     decrement stock, insert SALE movements with negative quantity           [CHECKs]
+   COMMIT
+ → invoice</code></pre>
+
+<h3>7.5 Sales session</h3>
+<p>At most one open session per employee (database). Every sale and return attaches to the employee's own open session. Closing records expected cash, actual cash, the difference and notes; a shortage never blocks closing; the difference must equal actual minus expected. Closed sessions are never reopened.</p>
+
+<h3>7.6 Purchasing</h3>
+<p>Statuses <code>draft → confirmed → received</code> or <code>cancelled</code>. <span class="tag t-new">V1.1</span> Confirmation and cancellation record who and when, and the database rejects any status without its matching who/when columns. Receiving selects the warehouse, increments stock with <code>PURCHASE_RECEIPT</code> movements and can happen once per order in V1.</p>
+
+<h3>7.7 Stock adjustment</h3>
+<p>Reason is mandatory and cannot be blank. Each line stores previous, new and difference in base units; the difference must be the exact subtraction and cannot be zero. The resulting stock cannot be negative.</p>
+
+<h3>7.8 Stock transfer</h3>
+<p>Source and destination must differ (CHECK). Each line produces <code>TRANSFER_OUT</code> (negative) and <code>TRANSFER_IN</code> (positive) movements in one transaction.</p>
+
+<h3>7.9 Returns and refunds</h3>
+<ul>
+  <li>Only <strong>cash</strong> sales can be returned, enforced in the database.</li>
+  <li>A return line must belong to the invoice being returned (two composite foreign keys sharing <code>sale_id</code>).</li>
+  <li><code>returned_quantity</code> on the sale line can never exceed the sold quantity (CHECK), even under concurrent returns.</li>
+  <li>Refund = one per return, cash, and its amount must equal the return total exactly.</li>
+  <li>The return total is computed from net prices. On the final return of a line, the refund uses the remaining line amount so rounding never leaves the customer short. <span class="tag t-svc">SERVICE</span></li>
+  <li>Reason mandatory and non-blank. The original sale is never modified.</li>
+</ul>
+
+<h3>7.10 Stock movements</h3>
+<table>
+  <tr><th style="width:26%">Type (stored value)</th><th style="width:14%">Sign (CHECK)</th><th>Reference alias</th></tr>
+  <tr><td><code>purchase_receipt</code></td><td>positive</td><td><code>purchase_receipt</code></td></tr>
+  <tr><td><code>sale</code></td><td>negative</td><td><code>sale</code></td></tr>
+  <tr><td><code>return</code></td><td>positive</td><td><code>return</code></td></tr>
+  <tr><td><code>adjustment</code></td><td>non-zero</td><td><code>stock_adjustment</code></td></tr>
+  <tr><td><code>transfer_out</code></td><td>negative</td><td><code>stock_transfer</code></td></tr>
+  <tr><td><code>transfer_in</code></td><td>positive</td><td><code>stock_transfer</code></td></tr>
+</table>
+
+<h3>7.11 Reporting and settings</h3>
+<p>Reports are read-only, permission-filtered, and use <code>sale_items.unit_cost</code> captured at sale time for profit. Seeded settings: <code>company_name</code>, <code>company_phone</code>, <code>company_address</code>, <code>company_logo</code>, <code>currency</code> (LYD), <code>tax_rate</code> (0.00), <code>invoice_prefix</code> (INV). Critical settings (currency, tax rate, invoice prefix) are audited on change.</p>
+
+<!-- ================= 8 ================= -->
+<h2 class="page-break">8. Data Model</h2>
+<p><strong>31 application tables</strong>, <strong>53 foreign keys</strong>, <strong>38 CHECK constraints</strong>, plus 8 Laravel system tables (migrations, sessions, cache, cache_locks, jobs, job_batches, failed_jobs, password_reset_tokens).</p>
+
+<h3>8.1 Balance and history</h3>
+<pre><code>        inventory operation  (one transaction, rows locked)
+               │
+     ┌─────────┴──────────┐
+     ▼                    ▼
+warehouse_stocks     stock_movements
+current balance      immutable history (signed, balance_after, polymorphic reference)</code></pre>
+
+<h3>8.2 The composite-key pattern <span class="tag t-new">V1.1</span></h3>
+<p>A foreign key over two columns proves that a row belongs to the right parent, not merely that both ids exist. The parent carries a unique index on the pair.</p>
+<table>
+  <tr><th style="width:34%">Guarantee</th><th>Mechanism</th></tr>
+  <tr><td>A unit belongs to the line's product</td><td><code>(product_unit_id, product_id) → product_units(id, product_id)</code></td></tr>
+  <tr><td>A sale is in the seller's own session</td><td><code>sales(sales_session_id, user_id) → sales_sessions(id, user_id)</code></td></tr>
+  <tr><td>A return is in the returner's own session</td><td><code>returns(sales_session_id, user_id) → sales_sessions(id, user_id)</code></td></tr>
+  <tr><td>Only cash sales are returned</td><td><code>returns(sale_id, sale_payment_method) → sales(id, payment_method)</code> plus <code>CHECK (sale_payment_method = 'cash')</code></td></tr>
+  <tr><td>A return line belongs to the returned invoice</td><td><code>return_items(return_id, sale_id) → returns(id, sale_id)</code> and <code>return_items(sale_item_id, sale_id) → sale_items(id, sale_id)</code></td></tr>
+  <tr><td>Refund equals return total</td><td><code>refunds(return_id, amount) → returns(id, total_amount)</code></td></tr>
+</table>
+
+<h3>8.3 Invariants enforced by the database</h3>
+<table>
+  <tr><th style="width:48%">Invariant</th><th>Mechanism</th></tr>
+  <tr><td>Stock never negative</td><td>CHECK on balances, balance_after and adjustment quantities</td></tr>
+  <tr><td>Movement sign matches its type</td><td><code>stock_movements_direction_check</code></td></tr>
+  <tr><td>One open session per employee</td><td>Generated <code>active_key</code> + unique index</td></tr>
+  <tr><td>Exactly one base unit per product, factor 1</td><td>Generated <code>base_key</code> + unique index + CHECK</td></tr>
+  <tr><td>Base quantity matches unit factor</td><td>CHECK with <code>TRUNCATE</code></td></tr>
+  <tr><td>Invoice discount, tax, total and line amounts are arithmetically correct</td><td>Five CHECKs with <code>ROUND</code></td></tr>
+  <tr><td>Nothing is returned more than it was sold</td><td><code>0 ≤ returned_quantity ≤ quantity</code></td></tr>
+  <tr><td>Session and purchase status agree with their dates and amounts</td><td>Status consistency CHECKs</td></tr>
+  <tr><td>One receipt per order; one refund per return</td><td>Unique indexes</td></tr>
+  <tr><td>Transfer source ≠ destination; reasons are not blank</td><td>CHECKs</td></tr>
+  <tr><td>No duplicate submissions; unique document references</td><td>Unique idempotency keys and reference numbers</td></tr>
+  <tr><td>No orphaned history</td><td><code>RESTRICT</code> foreign keys; only true child lines cascade from their header</td></tr>
+</table>
+
+<h3>8.4 Rules that services must enforce <span class="tag t-svc">SERVICE</span></h3>
+<p>These need other rows, sums or live state that a CHECK cannot read. They were identified explicitly, one of them by testing that the database accepts it.</p>
+<table>
+  <tr><th style="width:5%">#</th><th>Rule</th></tr>
+  <tr><td>1</td><td>Sales and returns only in an <strong>open</strong> session (verified: the database accepts a sale on a closed session).</td></tr>
+  <tr><td>2</td><td>Invoice subtotal equals the sum of its lines; return total equals the sum of its lines.</td></tr>
+  <tr><td>3</td><td>A return line's unit price equals the sale line's net unit price; its base quantity uses the sale line's factor.</td></tr>
+  <tr><td>4</td><td>Sufficient stock checked under row lock before decrementing (the CHECK is the last line of defence).</td></tr>
+  <tr><td>5</td><td>Products, units, warehouses, suppliers and customers are active when used.</td></tr>
+  <tr><td>6</td><td>A line's frozen <code>unit_factor</code> equals the unit's factor at the time of the transaction.</td></tr>
+  <tr><td>7</td><td>Stock movements are created only by the inventory service; the polymorphic reference cannot be a foreign key.</td></tr>
+  <tr><td>8</td><td>Expected cash at closing = opening float + cash sales − cash refunds for that session.</td></tr>
+</table>
+
+<h3>8.5 Schema reference (generated from the live database)</h3>
+<p>Every table below is exactly as deployed. "Notes" explain intent; constraints are listed under each table.</p>
+<h4>Identity and governance</h4>
+<p class="tbl-title"><span class="n">1</span>roles</p>
+<p class="tbl-purpose">Configurable roles. One role per user.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>name</td><td>varchar(50)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>slug</td><td>varchar(50)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>description</td><td>varchar(255)</td><td>NULL</td><td></td></tr>
+<tr><td>is_system</td><td>tinyint(1)</td><td>NOT NULL, default 0</td><td>Only the admin role is protected from deletion</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(name)</td></tr>
+<tr><td>UNIQUE</td><td>(slug)</td></tr>
+</table>
+<p class="tbl-title"><span class="n">2</span>permissions</p>
+<p class="tbl-purpose">System-defined capabilities, seeded; never edited through the interface. No timestamps.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>name</td><td>varchar(100)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>module</td><td>varchar(50)</td><td>NOT NULL</td><td>Groups permissions in the role editor (renamed from &quot;group&quot;, a reserved word)</td></tr>
+<tr><td>description</td><td>varchar(255)</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(name)</td></tr>
+</table>
+<p class="tbl-title"><span class="n">3</span>permission_role</p>
+<p class="tbl-purpose">Pivot between roles and permissions. Composite primary key prevents duplicate grants.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>role_id</td><td>bigint unsigned</td><td>NOT NULL, PK</td><td></td></tr>
+<tr><td>permission_id</td><td>bigint unsigned</td><td>NOT NULL, PK</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>PRIMARY KEY</td><td>(role_id,permission_id)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(permission_id) → permissions(id) ON DELETE CASCADE</td></tr>
+<tr><td>FOREIGN KEY</td><td>(role_id) → roles(id) ON DELETE CASCADE</td></tr>
+</table>
+<p class="tbl-title"><span class="n">4</span>users</p>
+<p class="tbl-purpose">Employees. No email_verified_at (accepting the invitation proves the address) and no remember_token (&quot;remember me&quot; disabled).</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>role_id</td><td>bigint unsigned</td><td>NOT NULL</td><td>Exactly one role; RESTRICT blocks deleting a role that is in use</td></tr>
+<tr><td>name</td><td>varchar(100)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>email</td><td>varchar(150)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>phone</td><td>varchar(20)</td><td>NULL</td><td></td></tr>
+<tr><td>password</td><td>varchar(255)</td><td>NULL</td><td>NULL until the invitation is accepted; bcrypt via the hashed cast</td></tr>
+<tr><td>status</td><td>enum(&#039;pending&#039;,&#039;active&#039;,&#039;disabled&#039;)</td><td>NOT NULL, default pending</td><td>Login is refused unless active</td></tr>
+<tr><td>last_login_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(email)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(role_id) → roles(id) ON DELETE RESTRICT</td></tr>
+</table>
+<p class="tbl-title"><span class="n">5</span>user_invitations</p>
+<p class="tbl-purpose">Temporary, single-use onboarding links. Valid for 24 hours.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>user_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>token_hash</td><td>char(64)</td><td>NOT NULL</td><td>SHA-256 of the token; the raw token is only ever in the e-mailed link</td></tr>
+<tr><td>expires_at</td><td>timestamp</td><td>NOT NULL</td><td></td></tr>
+<tr><td>accepted_at</td><td>timestamp</td><td>NULL</td><td>Non-null means used (single use)</td></tr>
+<tr><td>invited_by</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(token_hash)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(invited_by) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(user_id) → users(id) ON DELETE CASCADE</td></tr>
+</table>
+<p class="tbl-title"><span class="n">6</span>audit_logs</p>
+<p class="tbl-purpose">Immutable record of sensitive actions. No updated_at.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>user_id</td><td>bigint unsigned</td><td>NULL</td><td></td></tr>
+<tr><td>action</td><td>varchar(50)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>auditable_type</td><td>varchar(255)</td><td>NOT NULL</td><td>Short morph alias (e.g. &quot;user&quot;, &quot;sale&quot;), never a class name</td></tr>
+<tr><td>auditable_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>old_values</td><td>json</td><td>NULL</td><td></td></tr>
+<tr><td>new_values</td><td>json</td><td>NULL</td><td></td></tr>
+<tr><td>reason</td><td>varchar(255)</td><td>NULL</td><td></td></tr>
+<tr><td>ip_address</td><td>varchar(45)</td><td>NULL</td><td></td></tr>
+<tr><td>terminal_name</td><td>varchar(50)</td><td>NULL</td><td>Which point of sale performed the action</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NOT NULL, default CURRENT_TIMESTAMP</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>FOREIGN KEY</td><td>(user_id) → users(id) ON DELETE RESTRICT</td></tr>
+</table>
+<p class="tbl-title"><span class="n">7</span>settings</p>
+<p class="tbl-purpose">Key/value business settings. Only value is editable from the interface.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>name</td><td>varchar(100)</td><td>NOT NULL</td><td>Renamed from &quot;key&quot; (reserved word)</td></tr>
+<tr><td>value</td><td>text</td><td>NULL</td><td></td></tr>
+<tr><td>type</td><td>enum(&#039;string&#039;,&#039;integer&#039;,&#039;decimal&#039;,&#039;boolean&#039;,&#039;json&#039;)</td><td>NOT NULL, default string</td><td>How the text value is cast; decimals stay strings, never float</td></tr>
+<tr><td>section</td><td>varchar(50)</td><td>NOT NULL</td><td>Renamed from &quot;group&quot; (reserved word)</td></tr>
+<tr><td>is_critical</td><td>tinyint(1)</td><td>NOT NULL, default 0</td><td>Changes are always audited</td></tr>
+<tr><td>updated_by</td><td>bigint unsigned</td><td>NULL</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(name)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(updated_by) → users(id) ON DELETE RESTRICT</td></tr>
+</table>
+<h4>Master data</h4>
+<p class="tbl-title"><span class="n">8</span>categories</p>
+<p class="tbl-purpose">Flat categories (no nesting).</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>name</td><td>varchar(100)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>description</td><td>varchar(255)</td><td>NULL</td><td></td></tr>
+<tr><td>status</td><td>enum(&#039;active&#039;,&#039;inactive&#039;)</td><td>NOT NULL, default active</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(name)</td></tr>
+</table>
+<p class="tbl-title"><span class="n">9</span>brands</p>
+<p class="tbl-purpose">Product brands.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>name</td><td>varchar(100)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>status</td><td>enum(&#039;active&#039;,&#039;inactive&#039;)</td><td>NOT NULL, default active</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(name)</td></tr>
+</table>
+<p class="tbl-title"><span class="n">10</span>warehouses</p>
+<p class="tbl-purpose">Physical locations across cities.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>name</td><td>varchar(100)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>code</td><td>varchar(20)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>city</td><td>varchar(50)</td><td>NULL</td><td></td></tr>
+<tr><td>address</td><td>varchar(255)</td><td>NULL</td><td></td></tr>
+<tr><td>phone</td><td>varchar(20)</td><td>NULL</td><td></td></tr>
+<tr><td>supervisor_id</td><td>bigint unsigned</td><td>NULL</td><td>Informational only; not an access restriction</td></tr>
+<tr><td>status</td><td>enum(&#039;active&#039;,&#039;inactive&#039;)</td><td>NOT NULL, default active</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(code)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(supervisor_id) → users(id) ON DELETE RESTRICT</td></tr>
+</table>
+<p class="tbl-title"><span class="n">11</span>customers</p>
+<p class="tbl-purpose">Business entity only; customers never log in.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>name</td><td>varchar(100)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>phone</td><td>varchar(20)</td><td>NULL</td><td>Unique when provided; many walk-in customers may have none</td></tr>
+<tr><td>email</td><td>varchar(150)</td><td>NULL</td><td></td></tr>
+<tr><td>address</td><td>varchar(255)</td><td>NULL</td><td></td></tr>
+<tr><td>notes</td><td>text</td><td>NULL</td><td></td></tr>
+<tr><td>status</td><td>enum(&#039;active&#039;,&#039;inactive&#039;)</td><td>NOT NULL, default active</td><td></td></tr>
+<tr><td>created_by</td><td>bigint unsigned</td><td>NULL</td><td>Employee who registered the customer</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(phone)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(created_by) → users(id) ON DELETE RESTRICT</td></tr>
+</table>
+<p class="tbl-title"><span class="n">12</span>suppliers</p>
+<p class="tbl-purpose">Suppliers of purchase orders.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>name</td><td>varchar(100)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>contact_person</td><td>varchar(100)</td><td>NULL</td><td></td></tr>
+<tr><td>phone</td><td>varchar(20)</td><td>NULL</td><td></td></tr>
+<tr><td>email</td><td>varchar(150)</td><td>NULL</td><td></td></tr>
+<tr><td>address</td><td>varchar(255)</td><td>NULL</td><td></td></tr>
+<tr><td>notes</td><td>text</td><td>NULL</td><td></td></tr>
+<tr><td>status</td><td>enum(&#039;active&#039;,&#039;inactive&#039;)</td><td>NOT NULL, default active</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<p class="tbl-title"><span class="n">13</span>products</p>
+<p class="tbl-purpose">One row per sellable SKU. Prices live on product_units. Creating a product never creates stock.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>sku</td><td>varchar(50)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>name</td><td>varchar(150)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>category_id</td><td>bigint unsigned</td><td>NULL</td><td></td></tr>
+<tr><td>brand_id</td><td>bigint unsigned</td><td>NULL</td><td></td></tr>
+<tr><td>description</td><td>text</td><td>NULL</td><td></td></tr>
+<tr><td>reorder_level</td><td>decimal(12,3)</td><td>NOT NULL, default 0.000</td><td>In base units; at or below it the stock row is shown yellow, at zero red</td></tr>
+<tr><td>status</td><td>enum(&#039;active&#039;,&#039;inactive&#039;)</td><td>NOT NULL, default active</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(sku)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(brand_id) → brands(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(category_id) → categories(id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>products_reorder_level_check: (reorder_level &gt;= 0)</td></tr>
+</table>
+<p class="tbl-title"><span class="n">14</span>product_units</p>
+<p class="tbl-purpose">Units of measure per product (piece, dozen, carton) with explicit per-unit prices. Stock is always kept in the base unit.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>product_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>name</td><td>varchar(30)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>factor</td><td>decimal(12,4)</td><td>NOT NULL</td><td>How many base units this unit contains</td></tr>
+<tr><td>is_base</td><td>tinyint(1)</td><td>NOT NULL, default 0</td><td></td></tr>
+<tr><td>barcode</td><td>varchar(50)</td><td>NULL</td><td></td></tr>
+<tr><td>purchase_price</td><td>decimal(15,3)</td><td>NOT NULL, default 0.000</td><td>Explicit per unit, never derived by multiplication (wholesale is cheaper)</td></tr>
+<tr><td>selling_price</td><td>decimal(15,3)</td><td>NOT NULL, default 0.000</td><td></td></tr>
+<tr><td>status</td><td>enum(&#039;active&#039;,&#039;inactive&#039;)</td><td>NOT NULL, default active</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>base_key</td><td>bigint unsigned stored AS (if(is_base,product_id,NULL))</td><td>NULL</td><td>Stored generated column; its unique index allows exactly one base unit per product</td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(barcode)</td></tr>
+<tr><td>UNIQUE</td><td>(base_key)</td></tr>
+<tr><td>UNIQUE</td><td>(id,product_id)</td></tr>
+<tr><td>UNIQUE</td><td>(product_id,name)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(product_id) → products(id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>product_units_base_factor_check: ((is_base = 0) or (factor = 1))</td></tr>
+<tr><td>CHECK</td><td>product_units_factor_check: (factor &gt; 0)</td></tr>
+<tr><td>CHECK</td><td>product_units_prices_check: ((purchase_price &gt;= 0) and (selling_price &gt;= 0))</td></tr>
+</table>
+<h4>Inventory core</h4>
+<p class="tbl-title"><span class="n">15</span>warehouse_stocks</p>
+<p class="tbl-purpose">Current balance per product per warehouse, in base units. Changed only by inventory services, under row locks.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>warehouse_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>product_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>quantity</td><td>decimal(12,3)</td><td>NOT NULL, default 0.000</td><td>CHECK guarantees it can never be negative</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(warehouse_id,product_id)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(product_id) → products(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(warehouse_id) → warehouses(id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>warehouse_stocks_quantity_check: (quantity &gt;= 0)</td></tr>
+</table>
+<p class="tbl-title"><span class="n">16</span>stock_movements</p>
+<p class="tbl-purpose">Immutable history explaining every change to warehouse_stocks. No updated_at.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>product_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>warehouse_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>movement_type</td><td>enum(&#039;purchase_receipt&#039;,&#039;sale&#039;,&#039;return&#039;,&#039;adjustment&#039;,&#039;transfer_out&#039;,&#039;transfer_in&#039;)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td>Signed; the direction CHECK ties the sign to the movement type</td></tr>
+<tr><td>balance_after</td><td>decimal(12,3)</td><td>NOT NULL</td><td>Balance immediately after this movement; allows reconciling history with the current balance</td></tr>
+<tr><td>reference_type</td><td>varchar(255)</td><td>NOT NULL</td><td>Morph alias of the source document: purchase_receipt, sale, return, stock_adjustment, stock_transfer</td></tr>
+<tr><td>reference_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>user_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>reason</td><td>varchar(255)</td><td>NULL</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NOT NULL, default CURRENT_TIMESTAMP</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>FOREIGN KEY</td><td>(product_id) → products(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(user_id) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(warehouse_id) → warehouses(id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>stock_movements_balance_check: (balance_after &gt;= 0)</td></tr>
+<tr><td>CHECK</td><td>stock_movements_direction_check: (((movement_type in (&#039;purchase_receipt&#039;,&#039;return&#039;,&#039;transfer_in&#039;)) and (quantity &gt; 0)) or ((movement_type in (&#039;sale&#039;,&#039;transfer_out&#039;)) and (quantity &lt; 0)) or ((movement_type = &#039;adjustment&#039;) and (quantity &lt;&gt; 0)))</td></tr>
+</table>
+<p class="tbl-title"><span class="n">17</span>document_sequences</p>
+<p class="tbl-purpose">Counters for human-facing references (INV, PO, ADJ, TR, RET) per year. Issued atomically by DocumentSequence::next().</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>document_type</td><td>varchar(20)</td><td>NOT NULL, PK</td><td></td></tr>
+<tr><td>year</td><td>smallint unsigned</td><td>NOT NULL, PK</td><td></td></tr>
+<tr><td>last_number</td><td>int unsigned</td><td>NOT NULL, default 0</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>PRIMARY KEY</td><td>(document_type,year)</td></tr>
+</table>
+<h4>Purchasing</h4>
+<p class="tbl-title"><span class="n">18</span>purchases</p>
+<p class="tbl-purpose">Purchase orders. Creating or confirming a purchase never changes stock.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>reference_number</td><td>varchar(30)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>supplier_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>status</td><td>enum(&#039;draft&#039;,&#039;confirmed&#039;,&#039;received&#039;,&#039;cancelled&#039;)</td><td>NOT NULL, default draft</td><td>draft → confirmed → received, or cancelled; consistency CHECK ties status to its who/when columns</td></tr>
+<tr><td>subtotal</td><td>decimal(15,3)</td><td>NOT NULL, default 0.000</td><td></td></tr>
+<tr><td>total</td><td>decimal(15,3)</td><td>NOT NULL, default 0.000</td><td></td></tr>
+<tr><td>notes</td><td>text</td><td>NULL</td><td></td></tr>
+<tr><td>created_by</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>confirmed_by</td><td>bigint unsigned</td><td>NULL</td><td></td></tr>
+<tr><td>confirmed_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>cancelled_by</td><td>bigint unsigned</td><td>NULL</td><td>Added in v1.1 for accountability</td></tr>
+<tr><td>cancelled_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(reference_number)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(cancelled_by) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(confirmed_by) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(created_by) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(supplier_id) → suppliers(id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>purchases_amounts_check: ((subtotal &gt;= 0) and (total &gt;= 0))</td></tr>
+<tr><td>CHECK</td><td>purchases_status_check: (((status = &#039;draft&#039;) and (confirmed_at is null) and (cancelled_at is null)) or ((status in (&#039;confirmed&#039;,&#039;received&#039;)) and (confirmed_at is not null) and (confirmed_by is not null) and (cancelled_at is null)) or ((status = &#039;cancelled&#039;) and (cancelled_at is not null) and (cancelled_by is not null)))</td></tr>
+</table>
+<p class="tbl-title"><span class="n">19</span>purchase_items</p>
+<p class="tbl-purpose">Ordered lines with frozen unit factor and cost.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>purchase_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>product_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>product_unit_id</td><td>bigint unsigned</td><td>NOT NULL</td><td>Composite FK (product_unit_id, product_id) guarantees the unit belongs to the product</td></tr>
+<tr><td>unit_factor</td><td>decimal(12,4)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>base_quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td>Must equal TRUNCATE(quantity × unit_factor, 3), identical to PHP bcmul</td></tr>
+<tr><td>unit_cost</td><td>decimal(15,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>line_total</td><td>decimal(15,3)</td><td>NOT NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(purchase_id,product_unit_id)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(product_id) → products(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY (composite)</td><td>(product_unit_id,product_id) → product_units(id,product_id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(purchase_id) → purchases(id) ON DELETE CASCADE</td></tr>
+<tr><td>CHECK</td><td>purchase_items_amounts_check: ((unit_cost &gt;= 0) and (line_total &gt;= 0))</td></tr>
+<tr><td>CHECK</td><td>purchase_items_base_quantity_check: (base_quantity = truncate((quantity * unit_factor),3))</td></tr>
+<tr><td>CHECK</td><td>purchase_items_quantity_check: ((quantity &gt; 0) and (unit_factor &gt; 0))</td></tr>
+</table>
+<p class="tbl-title"><span class="n">20</span>purchase_receipts</p>
+<p class="tbl-purpose">The physical receiving event. Immutable.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>purchase_id</td><td>bigint unsigned</td><td>NOT NULL</td><td>UNIQUE: one receipt per order in V1; dropping this index enables partial receiving in V2</td></tr>
+<tr><td>warehouse_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>received_by</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>notes</td><td>text</td><td>NULL</td><td></td></tr>
+<tr><td>received_at</td><td>timestamp</td><td>NOT NULL, default CURRENT_TIMESTAMP</td><td>Event time; the only timestamp</td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(purchase_id)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(purchase_id) → purchases(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(received_by) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(warehouse_id) → warehouses(id) ON DELETE RESTRICT</td></tr>
+</table>
+<p class="tbl-title"><span class="n">21</span>purchase_receipt_items</p>
+<p class="tbl-purpose">What actually arrived, per order line. Product and unit are derived from the order line (3NF). Immutable.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>purchase_receipt_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>purchase_item_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>base_quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(purchase_receipt_id,purchase_item_id)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(purchase_item_id) → purchase_items(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(purchase_receipt_id) → purchase_receipts(id) ON DELETE CASCADE</td></tr>
+<tr><td>CHECK</td><td>purchase_receipt_items_quantity_check: ((quantity &gt; 0) and (base_quantity &gt; 0))</td></tr>
+</table>
+<h4>Inventory operations</h4>
+<p class="tbl-title"><span class="n">22</span>stock_adjustments</p>
+<p class="tbl-purpose">Corrections after a physical count. Immutable.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>reference_number</td><td>varchar(30)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>idempotency_key</td><td>char(36)</td><td>NOT NULL</td><td>Rejects a double-submitted form</td></tr>
+<tr><td>warehouse_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>user_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>reason</td><td>varchar(255)</td><td>NOT NULL</td><td>Mandatory and cannot be blank spaces</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NOT NULL, default CURRENT_TIMESTAMP</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(idempotency_key)</td></tr>
+<tr><td>UNIQUE</td><td>(reference_number)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(user_id) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(warehouse_id) → warehouses(id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>stock_adjustments_reason_check: (char_length(trim(reason)) &gt; 0)</td></tr>
+</table>
+<p class="tbl-title"><span class="n">23</span>stock_adjustment_items</p>
+<p class="tbl-purpose">Balances before and after, always in base units (no unit columns). Immutable.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>stock_adjustment_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>product_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>previous_quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>new_quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>difference</td><td>decimal(12,3)</td><td>NOT NULL</td><td>Must equal new_quantity − previous_quantity and cannot be zero</td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(stock_adjustment_id,product_id)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(product_id) → products(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(stock_adjustment_id) → stock_adjustments(id) ON DELETE CASCADE</td></tr>
+<tr><td>CHECK</td><td>stock_adjustment_items_difference_check: ((difference = (new_quantity - previous_quantity)) and (difference &lt;&gt; 0))</td></tr>
+<tr><td>CHECK</td><td>stock_adjustment_items_quantities_check: ((previous_quantity &gt;= 0) and (new_quantity &gt;= 0))</td></tr>
+</table>
+<p class="tbl-title"><span class="n">24</span>stock_transfers</p>
+<p class="tbl-purpose">Moves stock between two different warehouses. Immutable.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>reference_number</td><td>varchar(30)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>idempotency_key</td><td>char(36)</td><td>NOT NULL</td><td>Rejects a double-submitted form</td></tr>
+<tr><td>from_warehouse_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>to_warehouse_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>user_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>notes</td><td>text</td><td>NULL</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NOT NULL, default CURRENT_TIMESTAMP</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(idempotency_key)</td></tr>
+<tr><td>UNIQUE</td><td>(reference_number)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(from_warehouse_id) → warehouses(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(to_warehouse_id) → warehouses(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(user_id) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>stock_transfers_warehouses_check: (from_warehouse_id &lt;&gt; to_warehouse_id)</td></tr>
+</table>
+<p class="tbl-title"><span class="n">25</span>stock_transfer_items</p>
+<p class="tbl-purpose">Transferred packages, keeping the unit so the receiving warehouse can match what arrived. Immutable.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>stock_transfer_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>product_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>product_unit_id</td><td>bigint unsigned</td><td>NOT NULL</td><td>Composite FK guarantees the unit belongs to the product</td></tr>
+<tr><td>unit_factor</td><td>decimal(12,4)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>base_quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(stock_transfer_id,product_id)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(product_id) → products(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY (composite)</td><td>(product_unit_id,product_id) → product_units(id,product_id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(stock_transfer_id) → stock_transfers(id) ON DELETE CASCADE</td></tr>
+<tr><td>CHECK</td><td>stock_transfer_items_base_quantity_check: (base_quantity = truncate((quantity * unit_factor),3))</td></tr>
+<tr><td>CHECK</td><td>stock_transfer_items_quantity_check: ((quantity &gt; 0) and (unit_factor &gt; 0))</td></tr>
+</table>
+<h4>Selling</h4>
+<p class="tbl-title"><span class="n">26</span>sales_sessions</p>
+<p class="tbl-purpose">An employee&#039;s selling shift. Not tied to a warehouse. Holds the cash reconciliation.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>user_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>status</td><td>enum(&#039;open&#039;,&#039;closed&#039;)</td><td>NOT NULL, default open</td><td></td></tr>
+<tr><td>opening_float</td><td>decimal(15,3)</td><td>NOT NULL, default 0.000</td><td>Cash counted into the drawer at session start</td></tr>
+<tr><td>expected_cash</td><td>decimal(15,3)</td><td>NULL</td><td></td></tr>
+<tr><td>actual_cash</td><td>decimal(15,3)</td><td>NULL</td><td></td></tr>
+<tr><td>difference</td><td>decimal(15,3)</td><td>NULL</td><td>Must equal actual_cash − expected_cash; a shortage never blocks closing</td></tr>
+<tr><td>closing_notes</td><td>text</td><td>NULL</td><td></td></tr>
+<tr><td>opened_at</td><td>timestamp</td><td>NOT NULL, default CURRENT_TIMESTAMP</td><td></td></tr>
+<tr><td>closed_at</td><td>timestamp</td><td>NULL</td><td></td></tr>
+<tr><td>active_key</td><td>bigint unsigned stored AS (if((status = &#039;open&#039;),user_id,NULL))</td><td>NULL</td><td>Stored generated column; unique index allows one open session per employee</td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(active_key)</td></tr>
+<tr><td>UNIQUE</td><td>(id,user_id)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(user_id) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>sales_sessions_cash_check: ((opening_float &gt;= 0) and ((actual_cash is null) or (actual_cash &gt;= 0)))</td></tr>
+<tr><td>CHECK</td><td>sales_sessions_status_check: (((status = &#039;open&#039;) and (closed_at is null) and (expected_cash is null) and (actual_cash is null) and (difference is null)) or ((status = &#039;closed&#039;) and (closed_at is not null) and (closed_at &gt;= opened_at) and (expected_cash is not null) and (actual_cash is not null) and (difference = (actual_cash - expected_cash))))</td></tr>
+</table>
+<p class="tbl-title"><span class="n">27</span>sales</p>
+<p class="tbl-purpose">Invoice header. Immutable once written.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>invoice_number</td><td>varchar(30)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>idempotency_key</td><td>char(36)</td><td>NOT NULL</td><td>Rejects a double-submitted sale</td></tr>
+<tr><td>sales_session_id</td><td>bigint unsigned</td><td>NOT NULL</td><td>Composite FK (sales_session_id, user_id): the session must belong to the same employee</td></tr>
+<tr><td>user_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>customer_id</td><td>bigint unsigned</td><td>NULL</td><td></td></tr>
+<tr><td>warehouse_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>payment_method</td><td>enum(&#039;cash&#039;,&#039;card&#039;,&#039;transfer&#039;)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>subtotal</td><td>decimal(15,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>discount_percent</td><td>decimal(5,2)</td><td>NOT NULL, default 0.00</td><td></td></tr>
+<tr><td>discount_amount</td><td>decimal(15,3)</td><td>NOT NULL, default 0.000</td><td>Must equal ROUND(subtotal × discount_percent / 100, 3)</td></tr>
+<tr><td>tax_rate</td><td>decimal(5,2)</td><td>NOT NULL, default 0.00</td><td>Rate in force at the time of sale, frozen</td></tr>
+<tr><td>tax_amount</td><td>decimal(15,3)</td><td>NOT NULL, default 0.000</td><td>Must equal ROUND((subtotal − discount_amount) × tax_rate / 100, 3); tax applies after discount</td></tr>
+<tr><td>total</td><td>decimal(15,3)</td><td>NOT NULL</td><td>Must equal subtotal − discount_amount + tax_amount</td></tr>
+<tr><td>notes</td><td>varchar(255)</td><td>NULL</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NOT NULL, default CURRENT_TIMESTAMP</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(id,payment_method)</td></tr>
+<tr><td>UNIQUE</td><td>(idempotency_key)</td></tr>
+<tr><td>UNIQUE</td><td>(invoice_number)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(customer_id) → customers(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY (composite)</td><td>(sales_session_id,user_id) → sales_sessions(id,user_id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(user_id) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(warehouse_id) → warehouses(id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>sales_amounts_check: ((subtotal &gt;= 0) and (discount_amount &gt;= 0) and (tax_amount &gt;= 0) and (total &gt;= 0))</td></tr>
+<tr><td>CHECK</td><td>sales_discount_check: (discount_amount = round(((subtotal * discount_percent) / 100),3))</td></tr>
+<tr><td>CHECK</td><td>sales_rates_check: ((discount_percent between 0 and 100) and (tax_rate between 0 and 100))</td></tr>
+<tr><td>CHECK</td><td>sales_tax_check: (tax_amount = round((((subtotal - discount_amount) * tax_rate) / 100),3))</td></tr>
+<tr><td>CHECK</td><td>sales_total_check: (total = ((subtotal - discount_amount) + tax_amount))</td></tr>
+</table>
+<p class="tbl-title"><span class="n">28</span>sale_items</p>
+<p class="tbl-purpose">Invoice lines. Final once written, except the returned-quantity counter.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>sale_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>product_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>product_unit_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>unit_factor</td><td>decimal(12,4)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>base_quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>unit_price</td><td>decimal(15,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>unit_cost</td><td>decimal(15,3)</td><td>NOT NULL</td><td>Cost per base unit at the time of sale, for profit reporting</td></tr>
+<tr><td>discount_share</td><td>decimal(15,3)</td><td>NOT NULL, default 0.000</td><td>This line&#039;s share of the invoice discount</td></tr>
+<tr><td>line_total</td><td>decimal(15,3)</td><td>NOT NULL</td><td>Must equal ROUND(quantity × unit_price, 3) − discount_share</td></tr>
+<tr><td>net_unit_price</td><td>decimal(15,3)</td><td>NOT NULL</td><td>Must equal ROUND(line_total / quantity, 3); the basis for refunds</td></tr>
+<tr><td>returned_quantity</td><td>decimal(12,3)</td><td>NOT NULL, default 0.000</td><td>CHECK keeps it between 0 and quantity: nothing can be returned twice</td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(id,sale_id)</td></tr>
+<tr><td>UNIQUE</td><td>(sale_id,product_unit_id)</td></tr>
+<tr><td>FOREIGN KEY</td><td>(product_id) → products(id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY (composite)</td><td>(product_unit_id,product_id) → product_units(id,product_id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(sale_id) → sales(id) ON DELETE CASCADE</td></tr>
+<tr><td>CHECK</td><td>sale_items_amounts_check: ((unit_price &gt;= 0) and (unit_cost &gt;= 0) and (discount_share &gt;= 0) and (line_total &gt;= 0))</td></tr>
+<tr><td>CHECK</td><td>sale_items_base_quantity_check: (base_quantity = truncate((quantity * unit_factor),3))</td></tr>
+<tr><td>CHECK</td><td>sale_items_line_total_check: (line_total = (round((quantity * unit_price),3) - discount_share))</td></tr>
+<tr><td>CHECK</td><td>sale_items_net_price_check: (net_unit_price = round((line_total / quantity),3))</td></tr>
+<tr><td>CHECK</td><td>sale_items_quantity_check: ((quantity &gt; 0) and (unit_factor &gt; 0))</td></tr>
+<tr><td>CHECK</td><td>sale_items_returned_check: ((returned_quantity &gt;= 0) and (returned_quantity &lt;= quantity))</td></tr>
+</table>
+<h4>Returns and refunds</h4>
+<p class="tbl-title"><span class="n">29</span>returns</p>
+<p class="tbl-purpose">Customer return against one cash sale. Immutable. Stock returns to the sale&#039;s warehouse, so no warehouse column.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>reference_number</td><td>varchar(30)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>idempotency_key</td><td>char(36)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>sale_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>sale_payment_method</td><td>enum(&#039;cash&#039;,&#039;card&#039;,&#039;transfer&#039;)</td><td>NOT NULL, default cash</td><td>Integrity column: composite FK copies the sale&#039;s payment method and a CHECK requires cash</td></tr>
+<tr><td>sales_session_id</td><td>bigint unsigned</td><td>NOT NULL</td><td>Composite FK: the session must belong to the same employee</td></tr>
+<tr><td>user_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>reason</td><td>varchar(255)</td><td>NOT NULL</td><td>Mandatory and cannot be blank spaces</td></tr>
+<tr><td>total_amount</td><td>decimal(15,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NOT NULL, default CURRENT_TIMESTAMP</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(id,sale_id)</td></tr>
+<tr><td>UNIQUE</td><td>(id,total_amount)</td></tr>
+<tr><td>UNIQUE</td><td>(idempotency_key)</td></tr>
+<tr><td>UNIQUE</td><td>(reference_number)</td></tr>
+<tr><td>FOREIGN KEY (composite)</td><td>(sale_id,sale_payment_method) → sales(id,payment_method) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY (composite)</td><td>(sales_session_id,user_id) → sales_sessions(id,user_id) ON DELETE RESTRICT</td></tr>
+<tr><td>FOREIGN KEY</td><td>(user_id) → users(id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>returns_amount_check: (total_amount &gt; 0)</td></tr>
+<tr><td>CHECK</td><td>returns_cash_only_check: (sale_payment_method = &#039;cash&#039;)</td></tr>
+<tr><td>CHECK</td><td>returns_reason_check: (char_length(trim(reason)) &gt; 0)</td></tr>
+</table>
+<p class="tbl-title"><span class="n">30</span>return_items</p>
+<p class="tbl-purpose">Returned lines, in the unit that was sold. Product and unit are derived from the sale line. Immutable.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>return_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>sale_id</td><td>bigint unsigned</td><td>NOT NULL</td><td>Shared by two composite FKs so the return and the sale line must belong to the same invoice</td></tr>
+<tr><td>sale_item_id</td><td>bigint unsigned</td><td>NOT NULL</td><td></td></tr>
+<tr><td>quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>base_quantity</td><td>decimal(12,3)</td><td>NOT NULL</td><td></td></tr>
+<tr><td>unit_price</td><td>decimal(15,3)</td><td>NOT NULL</td><td>The sale line&#039;s net (post-discount) price</td></tr>
+<tr><td>line_total</td><td>decimal(15,3)</td><td>NOT NULL</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(return_id,sale_item_id)</td></tr>
+<tr><td>FOREIGN KEY (composite)</td><td>(return_id,sale_id) → returns(id,sale_id) ON DELETE CASCADE</td></tr>
+<tr><td>FOREIGN KEY (composite)</td><td>(sale_item_id,sale_id) → sale_items(id,sale_id) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>return_items_amounts_check: ((unit_price &gt;= 0) and (line_total &gt;= 0))</td></tr>
+<tr><td>CHECK</td><td>return_items_quantity_check: ((quantity &gt; 0) and (base_quantity &gt; 0))</td></tr>
+</table>
+<p class="tbl-title"><span class="n">31</span>refunds</p>
+<p class="tbl-purpose">Cash handed back for a return. Exactly one per return. Employee and session are derived from the return. Immutable.</p>
+<table class="schema">
+<tr><th>Column</th><th>Type</th><th>Null / default</th><th>Notes</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>NOT NULL, auto increment, PK</td><td></td></tr>
+<tr><td>return_id</td><td>bigint unsigned</td><td>NOT NULL</td><td>UNIQUE: one refund per return</td></tr>
+<tr><td>amount</td><td>decimal(15,3)</td><td>NOT NULL</td><td>Composite FK (return_id, amount) → returns(id, total_amount): must equal the return total exactly</td></tr>
+<tr><td>method</td><td>enum(&#039;cash&#039;)</td><td>NOT NULL, default cash</td><td></td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>NOT NULL, default CURRENT_TIMESTAMP</td><td></td></tr>
+</table>
+<table class="constraints">
+<tr><td>UNIQUE</td><td>(return_id)</td></tr>
+<tr><td>FOREIGN KEY (composite)</td><td>(return_id,amount) → returns(id,total_amount) ON DELETE RESTRICT</td></tr>
+<tr><td>CHECK</td><td>refunds_amount_check: (amount &gt; 0)</td></tr>
+</table>
+
+
+<!-- ================= 9 ================= -->
+<h2 class="page-break">9. Technical Architecture and Implementation Status</h2>
+<h3>9.1 Stack</h3>
+<table>
+  <tr><th style="width:26%">Layer</th><th>Choice</th></tr>
+  <tr><td>Framework</td><td>Laravel 13.31 (installed packages require PHP ≥ 8.4.1)</td></tr>
+  <tr><td>Presentation</td><td>Blade, Tailwind CSS 4.3, Alpine.js 3.17 with the collapse plugin, Vite 8; Arabic RTL; Cairo font self-hosted</td></tr>
+  <tr><td>Database</td><td>MySQL 8.4.3 &mdash; needed for enforced CHECK constraints, indexed stored generated columns and composite foreign keys</td></tr>
+  <tr><td>Database user</td><td>Dedicated least-privilege user limited to the <code>mizan</code> schema; never <code>root</code></td></tr>
+  <tr><td>Business logic</td><td>Service classes own transactions and locking; controllers stay thin</td></tr>
+</table>
+
+<h3>9.2 Model conventions <span class="tag t-new">V1.1</span></h3>
+<ul>
+  <li><strong>30 models, 9 enums</strong> (<code>UserStatus</code>, <code>SettingType</code>, <code>ActiveStatus</code>, <code>StockMovementType</code>, <code>StockLevel</code>, <code>PurchaseStatus</code>, <code>SessionStatus</code>, <code>PaymentMethod</code>, <code>DocumentType</code>).</li>
+  <li><strong>Mass assignment:</strong> sensitive columns (role, status, password, is_system, created_by, is_base) are never fillable. Transaction and inventory models are fully guarded and written only by services.</li>
+  <li><strong>Immutability:</strong> an <code>Immutable</code> trait blocks update and delete on historical models; <code>SaleItem</code> allows only <code>returned_quantity</code>.</li>
+  <li><strong>Morph map (enforced):</strong> polymorphic columns store short stable aliases (<code>user</code>, <code>role</code>, <code>setting</code>, <code>category</code>, <code>brand</code>, <code>warehouse</code>, <code>customer</code>, <code>supplier</code>, <code>product</code>, <code>product_unit</code>, <code>purchase</code>, <code>purchase_receipt</code>, <code>stock_adjustment</code>, <code>stock_transfer</code>, <code>sales_session</code>, <code>sale</code>, <code>return</code>, <code>refund</code>), never class names, so renaming a class cannot break history.</li>
+  <li><strong>Strict mode</strong> outside production: silently discarded attributes, lazy loading and missing attributes raise errors.</li>
+  <li>The return model is <code>SaleReturn</code> (table <code>returns</code>) because <code>return</code> is reserved in PHP. Reserved SQL words were avoided as column names.</li>
+  <li>Index names are kept within MySQL's 64-character identifier limit.</li>
+</ul>
+
+<h3>9.3 Deployment and environments</h3>
+<p>Warehouses are in different cities, so V1 is one internet-hosted web application with a single shared database. Per-terminal installations and branch-local servers with synchronisation are rejected. Development uses Laragon's MySQL 8.4.3 and Herd's PHP 8.4 from PowerShell; Laragon's own terminal ships PHP 8.3 and cannot run the project.</p>
+<p>Schema changes on a database that holds data use <code>php artisan migrate</code>, never <code>migrate:fresh</code>. Migrations are grouped in batches so <code>migrate:rollback</code> undoes only the last one.</p>
+
+<h3>9.4 Implementation status (16 Sep 2026)</h3>
+<table>
+  <tr><th style="width:40%">Area</th><th style="width:16%">Status</th><th>Verification</th></tr>
+  <tr><td>Project, Arabic RTL layout, dashboard mock-up</td><td>Done</td><td>Rendered in the browser</td></tr>
+  <tr><td>Schema: 31 tables in 4 migration batches</td><td>Done</td><td>Every constraint attacked on a throwaway database, then re-tested on the real one; every rollback tested</td></tr>
+  <tr><td>Models, enums, relationships</td><td>Done</td><td>110 automated checks inside rolled-back transactions</td></tr>
+  <tr><td>Seeders: permissions, roles, settings, first admin</td><td>Done</td><td>Re-run safety confirmed</td></tr>
+  <tr><td>Document numbering under concurrency</td><td>Done</td><td>2 processes, 80 numbers, no duplicates or gaps</td></tr>
+  <tr><td>Authentication, services, screens, reports</td><td>Not started</td><td>&mdash;</td></tr>
+</table>
+
+<!-- ================= 10 ================= -->
+<h2>10. Security Requirements</h2>
+<table>
+  <tr><th style="width:27%">Area</th><th>Requirement</th></tr>
+  <tr><td>Passwords</td><td>bcrypt via the <code>hashed</code> cast; admin password at least 12 characters with letters and numbers; never logged, never typed into tinker (its history is saved to disk).</td></tr>
+  <tr><td>Invitation tokens</td><td>Random, sent once, stored as SHA-256, compared in constant time, 24 h, single use.</td></tr>
+  <tr><td>Shared terminals</td><td>No "remember me"; session ends when the browser closes.</td></tr>
+  <tr><td>Authorisation</td><td>Server-side on every operation; the active session is derived from the authenticated user.</td></tr>
+  <tr><td>Money</td><td>Computed server-side; the database re-checks the arithmetic.</td></tr>
+  <tr><td>Database access</td><td>Least-privilege application user. <strong>Production:</strong> revoke <code>UPDATE</code> and <code>DELETE</code> on <code>audit_logs</code> (and consider <code>stock_movements</code>) from that user.</td></tr>
+  <tr><td>Secrets</td><td>Only in <code>.env</code>, which is excluded from version control. Temporary setup scripts containing credentials were deleted.</td></tr>
+</table>
+
+<!-- ================= 11 ================= -->
+<h2>11. Out of Scope &mdash; V2 Roadmap</h2>
+<table>
+  <tr><th style="width:36%">Feature</th><th>V1 readiness</th></tr>
+  <tr><td>Partial goods receiving</td><td>Drop the unique index on <code>purchase_receipts.purchase_id</code>; receipt lines already reference order lines</td></tr>
+  <tr><td>Partial or non-cash refunds</td><td>Drop the <code>(return_id, amount)</code> foreign key; extend <code>refunds.method</code></td></tr>
+  <tr><td>Returning card or transfer sales</td><td>Drop <code>returns_cash_only_check</code></td></tr>
+  <tr><td>Returning a different unit than sold</td><td>Service-level conversion on return lines</td></tr>
+  <tr><td>Line-level discounts</td><td>Lines already store <code>discount_share</code> and <code>net_unit_price</code></td></tr>
+  <tr><td>Product variants, multi-tenancy, customer portal, delivery tracking, payment gateways</td><td>Not prepared; require new layers</td></tr>
+</table>
+
+<!-- ================= APPENDIX A ================= -->
+<h2 class="page-break">Appendix A &mdash; Permission Catalogue (51)</h2>
+<div class="two-col">
+<div>
+<pre><code>users (4)       users.view  users.create
+                users.update  users.disable
+roles (4)       roles.view  roles.create
+                roles.update  roles.delete
+catalog (6)     products.view  products.create
+                products.update  products.deactivate
+                categories.manage  brands.manage
+suppliers (4)   suppliers.view  .create
+                .update  .deactivate
+customers (4)   customers.view  .create
+                .update  .deactivate
+warehouses (4)  warehouses.view  .create
+                .update  .deactivate</code></pre>
+</div>
+<div>
+<pre><code>inventory (4)   inventory.view  inventory.adjust
+                inventory.transfer
+                stock_movements.view
+purchases (4)   purchases.view  .create
+                .confirm  .receive
+sales (9)       sessions.start  .close  .view_all
+                sales.create  .view_own  .view_all
+                returns.create  .view_own  .view_all
+reports (5)     reports.sales  .purchases
+                .inventory  .profit  .movements
+governance (3)  settings.view  settings.update
+                audit.view</code></pre>
+</div>
+</div>
+
+<!-- ================= APPENDIX B ================= -->
+<h2>Appendix B &mdash; Role / Permission Matrix</h2>
+<table>
+  <tr><th style="width:32%">Permission group</th><th style="width:13%">Admin (51)</th><th style="width:16%">Manager (31)</th><th style="width:19%">Sales (11)</th><th>Warehouse (9)</th></tr>
+  <tr><td>Users, roles, settings, audit</td><td>Full</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+  <tr><td>Products, categories, brands</td><td>Full</td><td>Full</td><td>View products</td><td>View products</td></tr>
+  <tr><td>Suppliers</td><td>Full</td><td>Full</td><td>&mdash;</td><td>View</td></tr>
+  <tr><td>Customers</td><td>Full</td><td>Full</td><td>View, create, update</td><td>&mdash;</td></tr>
+  <tr><td>Warehouses</td><td>Full</td><td>Full</td><td>&mdash;</td><td>View</td></tr>
+  <tr><td>Inventory view, movements</td><td>Full</td><td>Both</td><td>Inventory only</td><td>Both</td></tr>
+  <tr><td>Adjust, transfer</td><td>Full</td><td><strong>&mdash;</strong></td><td>&mdash;</td><td>Both</td></tr>
+  <tr><td>Purchases</td><td>Full</td><td>View, create, confirm</td><td>&mdash;</td><td>View, receive</td></tr>
+  <tr><td>Sessions</td><td>Full</td><td>View all</td><td>Start, close</td><td>&mdash;</td></tr>
+  <tr><td>Sales</td><td>Full</td><td>View all</td><td>Create, view own</td><td>&mdash;</td></tr>
+  <tr><td>Returns and refunds</td><td>Full</td><td>View all</td><td>Create, view own</td><td>&mdash;</td></tr>
+  <tr><td>Reports</td><td>All 5</td><td>All 5</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+
+<!-- ================= APPENDIX C ================= -->
+<h2 class="page-break">Appendix C &mdash; Decision Register</h2>
+<table>
+  <tr><th style="width:6%">#</th><th style="width:30%">Question</th><th>Decision</th></tr>
+  <tr><td>C1&ndash;C8</td><td>Source-document conflicts</td><td>See section 5</td></tr>
+  <tr><td>D1</td><td>Tables missing from the V1.0 ERD list</td><td>Added categories, brands, audit_logs, settings, user_invitations, product_units, document_sequences</td></tr>
+  <tr><td>D2</td><td>User-to-warehouse assignment</td><td>Rejected; supervisor is informational</td></tr>
+  <tr><td>D3</td><td>Negative stock</td><td>Never, by any operation</td></tr>
+  <tr><td>D4</td><td>Invoice identity</td><td>Column on <code>sales</code>, issued from the sequence</td></tr>
+  <tr><td>D5</td><td>Money precision</td><td><code>decimal(15,3)</code></td></tr>
+  <tr><td>D6</td><td>Profit basis</td><td><code>unit_cost</code> per base unit frozen on sale lines</td></tr>
+  <tr><td>D7</td><td>Tax</td><td>NOT NULL default 0; rate frozen per sale; applied after discount</td></tr>
+  <tr><td>D8</td><td>Discounts</td><td>Invoice-level percentage; refunds at net price</td></tr>
+  <tr><td>D9</td><td>Language</td><td>Arabic RTL; SKUs and numerals Latin</td></tr>
+  <tr><td>D10</td><td>Deletion</td><td>Status column; no soft deletes</td></tr>
+  <tr><td>D11</td><td>Units of measure</td><td>Multi-unit, frozen factors, per-unit prices</td></tr>
+  <tr><td>D12</td><td>Quantity type</td><td><code>decimal(12,3)</code></td></tr>
+  <tr><td>D13</td><td>Categories</td><td>Flat</td></tr>
+  <tr><td>D14</td><td>Walk-in sales</td><td>Allowed</td></tr>
+  <tr><td>D15</td><td>Purchase cancellation</td><td>Status added, with who and when</td></tr>
+  <tr><td>D16</td><td>Deployment</td><td>Single hosted web application</td></tr>
+  <tr><td>D17</td><td>Movement balance</td><td><code>balance_after</code> on every movement</td></tr>
+  <tr><td>D18</td><td>"Remember me"</td><td>Removed; session ends when the browser closes</td></tr>
+  <tr><td>D19</td><td>Invitation validity</td><td>24 hours</td></tr>
+  <tr><td>D20</td><td>First admin</td><td>Interactive seeder, hidden password input, ≥12 chars with letters and numbers</td></tr>
+  <tr><td>D21</td><td>Reserved words</td><td><code>permissions.module</code>, <code>settings.section</code>, <code>settings.name</code></td></tr>
+  <tr><td>D22</td><td>Time zone</td><td>Africa/Tripoli; database session +02:00</td></tr>
+  <tr><td>D23</td><td>Non-negative decimals</td><td>CHECK constraints instead of unsigned</td></tr>
+  <tr><td>D24</td><td>Deleting a product that has units</td><td>RESTRICT (MySQL forbids CASCADE on the base column of a stored generated column)</td></tr>
+  <tr><td>D25</td><td>Movement type values</td><td>Lowercase, matching morph aliases</td></tr>
+  <tr><td>D26</td><td>Movement sign</td><td>CHECK ties sign to type</td></tr>
+  <tr><td>D27</td><td>Unit/product consistency</td><td>Composite foreign keys</td></tr>
+  <tr><td>D28</td><td>Base quantity rounding</td><td>Truncate to 3 decimals</td></tr>
+  <tr><td>D29</td><td>Purchase status integrity</td><td>Status consistency CHECK</td></tr>
+  <tr><td>D30</td><td>Receipt lines</td><td>Reference order lines, not products</td></tr>
+  <tr><td>D31</td><td>Adjustment lines</td><td>Base units only, no unit columns</td></tr>
+  <tr><td>D32</td><td>Duplicate submissions</td><td>Idempotency keys on sales, returns, adjustments, transfers</td></tr>
+  <tr><td>D33</td><td>Money rounding</td><td>Half away from zero, 3 decimals</td></tr>
+  <tr><td>D34</td><td>Session ownership</td><td>Enforced on sales and returns by composite keys</td></tr>
+  <tr><td>D35</td><td>Cash-only returns</td><td>Enforced in the database</td></tr>
+  <tr><td>D36</td><td>Return unit</td><td>The unit that was sold</td></tr>
+  <tr><td>D37</td><td>Return line ownership</td><td>Must belong to the returned invoice</td></tr>
+  <tr><td>D38</td><td>Refund</td><td>Equals return total; employee and session derived from the return</td></tr>
+  <tr><td>D39</td><td>Historical records</td><td>Immutable at model level</td></tr>
+  <tr><td>D40</td><td><code>currency_decimals</code> setting</td><td>Removed; precision is fixed by the schema</td></tr>
+  <tr><td>D41</td><td>Document numbering</td><td>Atomic <code>LAST_INSERT_ID</code> statement</td></tr>
+  <tr><td>D42</td><td>Session close</td><td><code>opened_at</code>/<code>closed_at</code>; difference = actual − expected</td></tr>
+</table>
+
+<!-- ================= APPENDIX D ================= -->
+<h2 class="page-break">Appendix D &mdash; Change Log V1.0 &rarr; V1.1</h2>
+<table>
+  <tr><th style="width:17%">Area</th><th style="width:36%">V1.0 said</th><th style="width:47%">V1.1 &mdash; and why</th></tr>
+  <tr><td>Users</td><td><code>remember_token</code>, <code>email_verified_at</code></td><td>Both removed. Shared terminals make "remember me" an accountability risk; accepting the invitation already proves the e-mail address.</td></tr>
+  <tr><td>Sessions (login)</td><td>Not specified</td><td>Expire when the browser closes; 120-minute idle lifetime.</td></tr>
+  <tr><td>Invitations</td><td>"Temporary"</td><td>24 hours.</td></tr>
+  <tr><td>Permissions</td><td><code>group</code>; about 50</td><td><code>module</code> (reserved word); exactly 51 in 11 modules.</td></tr>
+  <tr><td>Settings</td><td><code>key</code>, <code>group</code>; <code>currency_decimals</code></td><td><code>name</code>, <code>section</code>; <code>currency_decimals</code> removed.</td></tr>
+  <tr><td>Roles</td><td>All default roles protected?</td><td>Only admin is a system role; seeding never overwrites customised role permissions.</td></tr>
+  <tr><td>Time zone</td><td>Not specified</td><td>Africa/Tripoli and +02:00; the default config ignored the environment value and ran in UTC.</td></tr>
+  <tr><td>Non-negative values</td><td><code>unsigned</code> decimals</td><td>CHECK constraints (unsigned decimals deprecated in MySQL, removed from Laravel 13).</td></tr>
+  <tr><td>product_units FK</td><td>CASCADE</td><td>RESTRICT: MySQL rejected CASCADE because <code>base_key</code> is generated from <code>product_id</code> (error 1215).</td></tr>
+  <tr><td>Movement types</td><td>Uppercase</td><td>Lowercase, consistent with every other stored value and morph alias; sign enforced per type.</td></tr>
+  <tr><td>Line tables</td><td>product_id and product_unit_id independent</td><td>Composite foreign key proves the unit belongs to the product.</td></tr>
+  <tr><td>purchases</td><td>Statuses only</td><td><code>cancelled_by</code>/<code>cancelled_at</code> and a status consistency CHECK.</td></tr>
+  <tr><td>purchase_receipt_items</td><td>product_id, product_unit_id</td><td>Reference <code>purchase_item_id</code> (3NF; enables partial receiving per line).</td></tr>
+  <tr><td>purchase_receipts</td><td>Timestamps</td><td><code>received_at</code> only; the receipt is an immutable event.</td></tr>
+  <tr><td>stock_adjustment_items</td><td>Unit columns</td><td>Removed; balances are in base units.</td></tr>
+  <tr><td>Adjustments, transfers, sales, returns</td><td>Idempotency for sale, receipt, refund</td><td>Idempotency keys on sales, returns, adjustments, transfers.</td></tr>
+  <tr><td>document_sequences</td><td>Lock then increment</td><td>Single atomic <code>LAST_INSERT_ID</code> statement; concurrency-tested.</td></tr>
+  <tr><td>sales_sessions</td><td>Timestamps</td><td><code>opened_at</code>/<code>closed_at</code>; status consistency with the difference formula.</td></tr>
+  <tr><td>sales</td><td>No tax rate; timestamps</td><td><code>tax_rate</code> frozen; tax after discount; five arithmetic CHECKs; immutable (created_at only); session must be the seller's.</td></tr>
+  <tr><td>sale_items</td><td>Columns only</td><td>Formulas for line_total and net_unit_price; <code>returned_quantity ≤ quantity</code>.</td></tr>
+  <tr><td>returns</td><td>Cash rule in code</td><td>Cash-only enforced in the database via <code>sale_payment_method</code>; no warehouse column.</td></tr>
+  <tr><td>return_items</td><td>product_id, unit</td><td><code>sale_id</code> with two composite keys; product and unit derived from the sale line; quantity in the sold unit.</td></tr>
+  <tr><td>refunds</td><td>user_id, sales_session_id</td><td>Removed (derived from the return); amount must equal the return total.</td></tr>
+  <tr><td>Table count</td><td>"26 tables" (V1.0); "46" in discussion</td><td>31 application tables + 8 Laravel system tables = 39.</td></tr>
+  <tr><td>Rounding</td><td>Not specified</td><td>Half away from zero for money, truncation for base quantities; parity with PHP verified.</td></tr>
+  <tr><td>Deployment tooling</td><td>Not specified</td><td>Laragon MySQL 8.4.3 and Herd PHP 8.4 in development; <code>migrate</code>, never <code>fresh</code>, once data exists.</td></tr>
+</table>
+
+<!-- ================= APPENDIX E ================= -->
+<h2>Appendix E &mdash; Open Items</h2>
+<table>
+  <tr><th style="width:5%">#</th><th style="width:40%">Item</th><th>Proposed resolution</th></tr>
+  <tr><td>1</td><td>The deploying developer knows the first admin's password</td><td>Add <code>users.password_changed_at</code>; force a change at first login. Build with authentication.</td></tr>
+  <tr><td>2</td><td>Admin seeder re-asks every question when only the password is invalid</td><td>Ask name and e-mail until valid, then loop on the password alone.</td></tr>
+  <tr><td>3</td><td>E-mail addresses are stored with the case typed</td><td>Normalise to lowercase before saving.</td></tr>
+  <tr><td>4</td><td>Audit log protected only at model level</td><td>Revoke UPDATE/DELETE on <code>audit_logs</code> for the production database user.</td></tr>
+  <tr><td>5</td><td>Warehouse list on the sales screen</td><td>Authorised by <code>sales.create</code>, not <code>warehouses.view</code>.</td></tr>
+  <tr><td>6</td><td>Tinker aliases for new models</td><td>Run <code>composer dump-autoload --optimize</code> after adding models.</td></tr>
+</table>
+
+<footer class="doc-end">
+  Mizan &mdash; Product Requirements Document V1.1 &middot; 16 September 2026<br>
+  Supersedes V1.0. Section 8.5 generated from the live database schema.
+</footer>
+
+</body>
+</html>

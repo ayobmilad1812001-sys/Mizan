@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Cairo', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* هوية ميزان — أخضر مزرقّ هادئ */
+    --color-brand-50: #f0fdfa;
+    --color-brand-100: #ccfbf1;
+    --color-brand-200: #99f6e4;
+    --color-brand-300: #5eead4;
+    --color-brand-400: #2dd4bf;
+    --color-brand-500: #14b8a6;
+    --color-brand-600: #0d9488;
+    --color-brand-700: #0f766e;
+    --color-brand-800: #115e59;
+    --color-brand-900: #134e4a;
+    --color-brand-950: #042f2e;
+
+    /* ألوان حالة المخزون — متفق عليها في التصميم */
+    --color-stock-out: #dc2626;   /* نفد      → أحمر  */
+    --color-stock-low: #f59e0b;   /* قارب     → أصفر  */
+    --color-stock-ok: #16a34a;    /* متوفر    → أخضر  */
+}
+
+/* الأرقام دائماً بالاتجاه اللاتيني حتى داخل نص عربي */
+.nums {
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+}
+
+/* شريط تمرير أنيق للقائمة الجانبية */
+.scroll-thin::-webkit-scrollbar {
+    width: 6px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+    background: rgb(255 255 255 / 0.15);
+    border-radius: 9999px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+[x-cloak] {
+    display: none !important;
+}
