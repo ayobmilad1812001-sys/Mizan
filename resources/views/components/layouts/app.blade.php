@@ -32,6 +32,12 @@
         @include('partials.topbar', ['title' => $title, 'subtitle' => $subtitle])
 
         <main class="p-4 lg:p-6">
+            @if (session('error'))
+                <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-800">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             {{ $slot }}
         </main>
     </div>

@@ -22,6 +22,7 @@ use App\Models\User;
 use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -39,6 +40,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::before(fn (User $user, string $ability) => $user->hasPermission($ability) ?: null);
+
         Model::shouldBeStrict(! $this->app->isProduction());
 
         Relation::enforceMorphMap([

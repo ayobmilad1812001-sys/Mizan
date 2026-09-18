@@ -6,6 +6,7 @@
             'icon' => 'dashboard',
             'key' => 'dashboard',
             'url' => route('dashboard'),
+            'permission' => null,
         ],
         [
             'type' => 'group',
@@ -13,10 +14,10 @@
             'icon' => 'sales',
             'key' => 'sales',
             'items' => [
-                ['label' => 'نقطة البيع', 'key' => 'sales.pos', 'url' => '#'],
-                ['label' => 'الفواتير', 'key' => 'sales.invoices', 'url' => '#'],
-                ['label' => 'المرتجعات', 'key' => 'sales.returns', 'url' => '#'],
-                ['label' => 'جلسات البيع', 'key' => 'sales.sessions', 'url' => '#'],
+                ['label' => 'نقطة البيع', 'key' => 'sales.pos', 'url' => '#', 'permission' => 'sales.create'],
+                ['label' => 'الفواتير', 'key' => 'sales.invoices', 'url' => '#', 'permission' => ['sales.view_own', 'sales.view_all']],
+                ['label' => 'المرتجعات', 'key' => 'sales.returns', 'url' => '#', 'permission' => ['returns.view_own', 'returns.view_all']],
+                ['label' => 'جلسات البيع', 'key' => 'sales.sessions', 'url' => '#', 'permission' => ['sessions.start', 'sessions.view_all']],
             ],
         ],
         [
@@ -25,10 +26,10 @@
             'icon' => 'inventory',
             'key' => 'inventory',
             'items' => [
-                ['label' => 'أرصدة المخازن', 'key' => 'inventory.stocks', 'url' => '#'],
-                ['label' => 'حركات المخزون', 'key' => 'inventory.movements', 'url' => '#'],
-                ['label' => 'تسويات المخزون', 'key' => 'inventory.adjustments', 'url' => '#'],
-                ['label' => 'التحويلات بين المخازن', 'key' => 'inventory.transfers', 'url' => '#'],
+                ['label' => 'أرصدة المخازن', 'key' => 'inventory.stocks', 'url' => route('warehouse-stocks.index'), 'permission' => 'inventory.view'],
+                ['label' => 'حركات المخزون', 'key' => 'inventory.movements', 'url' => route('stock-movements.index'), 'permission' => 'stock_movements.view'],
+                ['label' => 'تسويات المخزون', 'key' => 'inventory.adjustments', 'url' => '#', 'permission' => 'inventory.adjust'],
+                ['label' => 'التحويلات بين المخازن', 'key' => 'inventory.transfers', 'url' => '#', 'permission' => 'inventory.transfer'],
             ],
         ],
         [
@@ -37,8 +38,8 @@
             'icon' => 'purchases',
             'key' => 'purchases',
             'items' => [
-                ['label' => 'أوامر الشراء', 'key' => 'purchases.orders', 'url' => '#'],
-                ['label' => 'استلام البضاعة', 'key' => 'purchases.receipts', 'url' => '#'],
+                ['label' => 'أوامر الشراء', 'key' => 'purchases.orders', 'url' => route('purchases.index'), 'permission' => 'purchases.view'],
+                ['label' => 'استلام البضاعة', 'key' => 'purchases.receipts', 'url' => route('purchases.receive.index'), 'permission' => 'purchases.receive'],
             ],
         ],
         [
@@ -47,12 +48,12 @@
             'icon' => 'catalog',
             'key' => 'catalog',
             'items' => [
-                ['label' => 'المنتجات', 'key' => 'catalog.products', 'url' => '#'],
-                ['label' => 'التصنيفات', 'key' => 'catalog.categories', 'url' => '#'],
-                ['label' => 'الماركات', 'key' => 'catalog.brands', 'url' => '#'],
-                ['label' => 'المخازن', 'key' => 'catalog.warehouses', 'url' => '#'],
-                ['label' => 'العملاء', 'key' => 'catalog.customers', 'url' => '#'],
-                ['label' => 'الموردون', 'key' => 'catalog.suppliers', 'url' => '#'],
+                ['label' => 'المنتجات', 'key' => 'catalog.products', 'url' => route('products.index'), 'permission' => 'products.view'],
+                ['label' => 'التصنيفات', 'key' => 'catalog.categories', 'url' => route('categories.index'), 'permission' => 'categories.manage'],
+                ['label' => 'الماركات', 'key' => 'catalog.brands', 'url' => route('brands.index'), 'permission' => 'brands.manage'],
+                ['label' => 'المخازن', 'key' => 'catalog.warehouses', 'url' => route('warehouses.index'), 'permission' => 'warehouses.view'],
+                ['label' => 'العملاء', 'key' => 'catalog.customers', 'url' => route('customers.index'), 'permission' => 'customers.view'],
+                ['label' => 'الموردون', 'key' => 'catalog.suppliers', 'url' => route('suppliers.index'), 'permission' => 'suppliers.view'],
             ],
         ],
         [
@@ -61,10 +62,11 @@
             'icon' => 'reports',
             'key' => 'reports',
             'items' => [
-                ['label' => 'تقرير المبيعات', 'key' => 'reports.sales', 'url' => '#'],
-                ['label' => 'تقرير المشتريات', 'key' => 'reports.purchases', 'url' => '#'],
-                ['label' => 'تقرير المخزون', 'key' => 'reports.inventory', 'url' => '#'],
-                ['label' => 'تقرير الأرباح', 'key' => 'reports.profit', 'url' => '#'],
+                ['label' => 'تقرير المبيعات', 'key' => 'reports.sales', 'url' => '#', 'permission' => 'reports.sales'],
+                ['label' => 'تقرير المشتريات', 'key' => 'reports.purchases', 'url' => '#', 'permission' => 'reports.purchases'],
+                ['label' => 'تقرير المخزون', 'key' => 'reports.inventory', 'url' => '#', 'permission' => 'reports.inventory'],
+                ['label' => 'تقرير الأرباح', 'key' => 'reports.profit', 'url' => '#', 'permission' => 'reports.profit'],
+                ['label' => 'تقرير حركات المخزون', 'key' => 'reports.movements', 'url' => '#', 'permission' => 'reports.movements'],
             ],
         ],
         [
@@ -73,13 +75,21 @@
             'icon' => 'admin',
             'key' => 'admin',
             'items' => [
-                ['label' => 'الموظفون', 'key' => 'admin.users', 'url' => '#'],
-                ['label' => 'الأدوار والصلاحيات', 'key' => 'admin.roles', 'url' => '#'],
-                ['label' => 'إعدادات النظام', 'key' => 'admin.settings', 'url' => '#'],
-                ['label' => 'سجل التدقيق', 'key' => 'admin.audit', 'url' => '#'],
+                ['label' => 'الموظفون', 'key' => 'admin.users', 'url' => '#', 'permission' => 'users.view'],
+                ['label' => 'الأدوار والصلاحيات', 'key' => 'admin.roles', 'url' => '#', 'permission' => 'roles.view'],
+                ['label' => 'إعدادات النظام', 'key' => 'admin.settings', 'url' => '#', 'permission' => 'settings.view'],
+                ['label' => 'سجل التدقيق', 'key' => 'admin.audit', 'url' => '#', 'permission' => 'audit.view'],
             ],
         ],
     ];
+
+    $visible = function ($permission) {
+        if ($permission === null) {
+            return true;
+        }
+
+        return collect((array) $permission)->contains(fn ($p) => auth()->user()->can($p));
+    };
 
     $current = $active ?? 'dashboard';
 @endphp
@@ -105,6 +115,7 @@
     <nav class="scroll-thin flex-1 space-y-1 overflow-y-auto px-3 py-4">
         @foreach ($nav as $entry)
             @if ($entry['type'] === 'link')
+                @continue(! $visible($entry['permission']))
                 @php $isActive = $current === $entry['key']; @endphp
                 <a href="{{ $entry['url'] }}"
                    @class([
@@ -116,9 +127,9 @@
                     <span>{{ $entry['label'] }}</span>
                 </a>
             @else
-                @php
-                    $groupActive = collect($entry['items'])->contains(fn ($i) => $i['key'] === $current);
-                @endphp
+                @php $items = collect($entry['items'])->filter(fn ($i) => $visible($i['permission']))->values(); @endphp
+                @continue($items->isEmpty())
+                @php $groupActive = $items->contains(fn ($i) => $i['key'] === $current); @endphp
                 <div x-data="{ open: @js($groupActive) }" class="select-none">
                     <button type="button" @click="open = ! open"
                             class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition hover:bg-white/5 hover:text-white"
@@ -130,7 +141,7 @@
                     </button>
 
                     <div x-show="open" x-cloak x-collapse class="mt-1 space-y-0.5 ps-4">
-                        @foreach ($entry['items'] as $item)
+                        @foreach ($items as $item)
                             @php $isActive = $current === $item['key']; @endphp
                             <a href="{{ $item['url'] }}"
                                @class([
@@ -156,16 +167,19 @@
     <div class="shrink-0 border-t border-white/10 p-3">
         <div class="flex items-center gap-3 rounded-lg px-2 py-2">
             <div class="grid size-9 shrink-0 place-items-center rounded-full bg-brand-700 text-sm font-bold text-white">
-                أ
+                {{ mb_substr(auth()->user()->name, 0, 1) }}
             </div>
             <div class="min-w-0 flex-1 leading-tight">
-                <p class="truncate text-sm font-medium text-white">أيوب ميلاد</p>
-                <p class="truncate text-[11px] text-slate-400">مدير النظام</p>
+                <p class="truncate text-sm font-medium text-white">{{ auth()->user()->name }}</p>
+                <p class="truncate text-[11px] text-slate-400">{{ auth()->user()->role->name }}</p>
             </div>
-            <button type="button" title="تسجيل الخروج"
-                    class="rounded-lg p-1.5 text-slate-400 transition hover:bg-white/10 hover:text-white">
-                <x-icon name="logout" class="size-5" />
-            </button>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" title="تسجيل الخروج"
+                        class="rounded-lg p-1.5 text-slate-400 transition hover:bg-white/10 hover:text-white">
+                    <x-icon name="logout" class="size-5" />
+                </button>
+            </form>
         </div>
     </div>
 </div>
