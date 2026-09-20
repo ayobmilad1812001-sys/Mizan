@@ -42,6 +42,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::before(fn (User $user, string $ability) => $user->hasPermission($ability) ?: null);
 
+        // Composite abilities for screens that two different permissions can reach:
+        // a seller holds the "own" permission, a manager only the "all" one. These are
+        // not rows in the permissions table, so Gate::before falls through to them.
+        Gate::define('sales.browse', fn (User $user) => $user->hasPermission('sales.view_own') || $user->hasPermission('sales.view_all'));
+        Gate::define('sessions.browse', fn (User $user) => $user->hasPermission('sessions.start') || $user->hasPermission('sessions.view_all'));
+        Gate::define('returns.browse', fn (User $user) => $user->hasPermission('returns.view_own') || $user->hasPermission('returns.view_all'));
+
         Model::shouldBeStrict(! $this->app->isProduction());
 
         Relation::enforceMorphMap([

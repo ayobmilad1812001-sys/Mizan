@@ -65,6 +65,95 @@ class InventoryService
         });
     }
 
+    /**
+     * Set a warehouse's balance of a product to a physically counted quantity and
+     * record the difference as an adjustment movement. Base units only.
+     *
+     * The previous quantity is whatever is found under the lock here — never a value
+     * carried in from a screen, which may be stale by the time it is submitted.
+     * Returns null when the counted quantity already matches the balance: there is
+     * no difference to record, and the adjustment line CHECK forbids a zero one.
+     *
+     * @return array{previous: string, new: string, difference: string, movement: StockMovement}|null
+     */
+    public function adjustTo(
+        Product $product,
+        Warehouse $warehouse,
+        string $countedBaseQuantity,
+        Model $reference,
+        User $user,
+        string $reason,
+    ): ?array {
+        return DB::transaction(function () use ($product, $warehouse, $countedBaseQuantity, $reference, $user, $reason) {
+            $stock = $this->lockOrCreateStockRow($warehouse, $product);
+
+            $previous = $stock->quantity;
+            $difference = bcsub($countedBaseQuantity, $previous, 3);
+
+            if (bccomp($difference, '0', 3) === 0) {
+                return null;
+            }
+
+            $stock->forceFill(['quantity' => $countedBaseQuantity])->save();
+
+            return [
+                'previous' => $previous,
+                'new' => $countedBaseQuantity,
+                'difference' => $difference,
+                'movement' => $this->recordMovement(
+                    $product, $warehouse, $difference, $countedBaseQuantity,
+                    StockMovementType::Adjustment, $reference, $user, $reason,
+                ),
+            ];
+        });
+    }
+
+    /**
+     * Lock every warehouse+product balance row an operation is about to touch, in one
+     * deterministic order. Without this, a transfer A->B and a transfer B->A running at
+     * the same moment would each hold the row the other needs next and deadlock.
+     * Rows that do not exist yet are created at zero first, since a missing row
+     * cannot be locked.
+     *
+     * @param  array<int, int>  $warehouseIds
+     * @param  array<int, int>  $productIds
+     */
+    public function lockBalances(array $warehouseIds, array $productIds): void
+    {
+        // Sort before building the insert: MySQL takes locks in the order the VALUES
+        // list is written, so two callers passing the same warehouses in opposite
+        // order would deadlock on this statement, before the ordered SELECT below
+        // ever runs. Both arrays are sorted so every caller inserts in one order.
+        $warehouseIds = array_unique($warehouseIds);
+        $productIds = array_unique($productIds);
+        sort($warehouseIds);
+        sort($productIds);
+
+        $rows = [];
+
+        foreach ($warehouseIds as $warehouseId) {
+            foreach ($productIds as $productId) {
+                $rows[] = [
+                    'warehouse_id' => $warehouseId,
+                    'product_id' => $productId,
+                    'quantity' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+
+        WarehouseStock::query()->insertOrIgnore($rows);
+
+        WarehouseStock::query()
+            ->whereIn('warehouse_id', $warehouseIds)
+            ->whereIn('product_id', $productIds)
+            ->orderBy('warehouse_id')
+            ->orderBy('product_id')
+            ->lockForUpdate()
+            ->get();
+    }
+
     private function lockOrCreateStockRow(Warehouse $warehouse, Product $product): WarehouseStock
     {
         $stock = WarehouseStock::query()

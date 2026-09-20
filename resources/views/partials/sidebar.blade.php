@@ -14,10 +14,10 @@
             'icon' => 'sales',
             'key' => 'sales',
             'items' => [
-                ['label' => 'نقطة البيع', 'key' => 'sales.pos', 'url' => '#', 'permission' => 'sales.create'],
-                ['label' => 'الفواتير', 'key' => 'sales.invoices', 'url' => '#', 'permission' => ['sales.view_own', 'sales.view_all']],
-                ['label' => 'المرتجعات', 'key' => 'sales.returns', 'url' => '#', 'permission' => ['returns.view_own', 'returns.view_all']],
-                ['label' => 'جلسات البيع', 'key' => 'sales.sessions', 'url' => '#', 'permission' => ['sessions.start', 'sessions.view_all']],
+                ['label' => 'نقطة البيع', 'key' => 'sales.pos', 'url' => route('sales.pos'), 'permission' => 'sales.create'],
+                ['label' => 'الفواتير', 'key' => 'sales.invoices', 'url' => route('sales.index'), 'permission' => ['sales.view_own', 'sales.view_all']],
+                ['label' => 'المرتجعات', 'key' => 'sales.returns', 'url' => route('returns.index'), 'permission' => ['returns.view_own', 'returns.view_all']],
+                ['label' => 'جلسات البيع', 'key' => 'sales.sessions', 'url' => route('sales-sessions.index'), 'permission' => ['sessions.start', 'sessions.view_all']],
             ],
         ],
         [
@@ -28,8 +28,8 @@
             'items' => [
                 ['label' => 'أرصدة المخازن', 'key' => 'inventory.stocks', 'url' => route('warehouse-stocks.index'), 'permission' => 'inventory.view'],
                 ['label' => 'حركات المخزون', 'key' => 'inventory.movements', 'url' => route('stock-movements.index'), 'permission' => 'stock_movements.view'],
-                ['label' => 'تسويات المخزون', 'key' => 'inventory.adjustments', 'url' => '#', 'permission' => 'inventory.adjust'],
-                ['label' => 'التحويلات بين المخازن', 'key' => 'inventory.transfers', 'url' => '#', 'permission' => 'inventory.transfer'],
+                ['label' => 'تسويات المخزون', 'key' => 'inventory.adjustments', 'url' => route('stock-adjustments.index'), 'permission' => 'inventory.view'],
+                ['label' => 'التحويلات بين المخازن', 'key' => 'inventory.transfers', 'url' => route('stock-transfers.index'), 'permission' => 'inventory.view'],
             ],
         ],
         [

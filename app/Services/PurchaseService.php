@@ -140,7 +140,8 @@ class PurchaseService
                 $purchase->forceFill(['status' => PurchaseStatus::Received])->save();
 
                 return $receipt;
-            });
+            // Retried on deadlock; see the note in StockTransferService.
+            }, 3);
         } catch (UniqueConstraintViolationException) {
             // Two concurrent "receive" requests for the same order: the loser hits
             // purchase_receipts.purchase_id's UNIQUE constraint. Report it the same

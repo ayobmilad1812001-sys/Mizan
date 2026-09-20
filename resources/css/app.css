@@ -27,12 +27,13 @@
 }
 
 /* الأرقام دائماً بالاتجاه اللاتيني حتى داخل نص عربي */
+/* لا نضع display هنا: unicode-bidi: isolate يكفي للعزل، بينما inline-block
+   كان يكسر خلايا الجداول (td) فتنكمش وتتلاصق الأرقام بدل محاذاتها بعناوينها */
 .nums {
     font-feature-settings: 'tnum';
     font-variant-numeric: tabular-nums;
     direction: ltr;
     unicode-bidi: isolate;
-    display: inline-block;
 }
 
 /* شريط تمرير أنيق للقائمة الجانبية */

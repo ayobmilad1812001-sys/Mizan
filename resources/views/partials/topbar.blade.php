@@ -23,15 +23,23 @@
     </div>
 
     {{-- حالة الجلسة --}}
-    <div class="hidden items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 sm:flex">
-        <span class="relative flex size-2">
-            <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
-        </span>
-        <span class="text-xs font-semibold text-emerald-800">
-            جلسة مفتوحة <span class="nums">#101</span>
-        </span>
-    </div>
+    @php
+        $openSession = auth()->user()?->hasPermission('sessions.start')
+            ? app(App\Services\SalesSessionService::class)->currentFor(auth()->user())
+            : null;
+    @endphp
+    @if ($openSession)
+        <a href="{{ route('sales-sessions.show', $openSession) }}"
+           class="hidden items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 transition hover:bg-emerald-100 sm:flex">
+            <span class="relative flex size-2">
+                <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
+            </span>
+            <span class="text-xs font-semibold text-emerald-800">
+                جلسة مفتوحة <span class="nums">#{{ $openSession->id }}</span>
+            </span>
+        </a>
+    @endif
 
     {{-- التنبيهات --}}
     <button type="button" class="relative rounded-lg p-2 text-slate-600 transition hover:bg-slate-100">

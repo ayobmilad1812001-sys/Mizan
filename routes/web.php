@@ -7,7 +7,12 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductUnitController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\ReturnController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SalesSessionController;
+use App\Http\Controllers\StockAdjustmentController;
 use App\Http\Controllers\StockMovementController;
+use App\Http\Controllers\StockTransferController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseStockController;
@@ -84,6 +89,42 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/{purchase}/cancel', [PurchaseController::class, 'cancel'])->name('cancel')->middleware('can:purchases.confirm');
         Route::get('/{purchase}/receive', [PurchaseController::class, 'receiveForm'])->name('receive.form')->middleware('can:purchases.receive');
         Route::post('/{purchase}/receive', [PurchaseController::class, 'receive'])->name('receive')->middleware('can:purchases.receive');
+    });
+
+    Route::get('/pos', [SaleController::class, 'pos'])->name('sales.pos')->middleware('can:sales.create');
+
+    Route::prefix('sales')->name('sales.')->group(function () {
+        Route::get('/', [SaleController::class, 'index'])->name('index')->middleware('can:sales.browse');
+        Route::post('/', [SaleController::class, 'store'])->name('store')->middleware('can:sales.create');
+        Route::get('/{sale}', [SaleController::class, 'show'])->name('show')->middleware('can:sales.browse');
+    });
+
+    Route::prefix('returns')->name('returns.')->group(function () {
+        Route::get('/', [ReturnController::class, 'index'])->name('index')->middleware('can:returns.browse');
+        Route::get('/create/{sale}', [ReturnController::class, 'create'])->name('create')->middleware('can:returns.create');
+        Route::post('/', [ReturnController::class, 'store'])->name('store')->middleware('can:returns.create');
+        Route::get('/{return}', [ReturnController::class, 'show'])->name('show')->middleware('can:returns.browse');
+    });
+
+    Route::prefix('sales-sessions')->name('sales-sessions.')->group(function () {
+        Route::get('/', [SalesSessionController::class, 'index'])->name('index')->middleware('can:sessions.browse');
+        Route::post('/', [SalesSessionController::class, 'store'])->name('store')->middleware('can:sessions.start');
+        Route::get('/{session}', [SalesSessionController::class, 'show'])->name('show')->middleware('can:sessions.browse');
+        Route::post('/{session}/close', [SalesSessionController::class, 'close'])->name('close')->middleware('can:sessions.close');
+    });
+
+    Route::prefix('stock-adjustments')->name('stock-adjustments.')->group(function () {
+        Route::get('/', [StockAdjustmentController::class, 'index'])->name('index')->middleware('can:inventory.view');
+        Route::get('/create', [StockAdjustmentController::class, 'create'])->name('create')->middleware('can:inventory.adjust');
+        Route::post('/', [StockAdjustmentController::class, 'store'])->name('store')->middleware('can:inventory.adjust');
+        Route::get('/{adjustment}', [StockAdjustmentController::class, 'show'])->name('show')->middleware('can:inventory.view');
+    });
+
+    Route::prefix('stock-transfers')->name('stock-transfers.')->group(function () {
+        Route::get('/', [StockTransferController::class, 'index'])->name('index')->middleware('can:inventory.view');
+        Route::get('/create', [StockTransferController::class, 'create'])->name('create')->middleware('can:inventory.transfer');
+        Route::post('/', [StockTransferController::class, 'store'])->name('store')->middleware('can:inventory.transfer');
+        Route::get('/{transfer}', [StockTransferController::class, 'show'])->name('show')->middleware('can:inventory.view');
     });
 
     Route::get('/warehouse-stocks', [WarehouseStockController::class, 'index'])->name('warehouse-stocks.index')->middleware('can:inventory.view');
