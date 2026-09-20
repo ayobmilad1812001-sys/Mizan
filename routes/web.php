@@ -1,19 +1,27 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\InvitationController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductUnitController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReturnController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SalesSessionController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockAdjustmentController;
 use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\StockTransferController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseStockController;
 use Illuminate\Support\Facades\Route;
@@ -21,10 +29,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+
+    Route::get('/invitations/{token}', [InvitationController::class, 'show'])->name('invitations.show');
+    Route::post('/invitations/{token}', [InvitationController::class, 'store']);
 });
 
 Route::middleware(['auth', 'active'])->group(function () {
-    Route::view('/', 'dashboard')->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::middleware('can:categories.manage')->prefix('categories')->name('categories.')->group(function () {
@@ -126,6 +138,36 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/', [StockTransferController::class, 'store'])->name('store')->middleware('can:inventory.transfer');
         Route::get('/{transfer}', [StockTransferController::class, 'show'])->name('show')->middleware('can:inventory.view');
     });
+
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/sales', [ReportController::class, 'sales'])->name('sales')->middleware('can:reports.sales');
+        Route::get('/purchases', [ReportController::class, 'purchases'])->name('purchases')->middleware('can:reports.purchases');
+        Route::get('/inventory', [ReportController::class, 'inventory'])->name('inventory')->middleware('can:reports.inventory');
+        Route::get('/profit', [ReportController::class, 'profit'])->name('profit')->middleware('can:reports.profit');
+        Route::get('/movements', [ReportController::class, 'movements'])->name('movements')->middleware('can:reports.movements');
+    });
+
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index')->middleware('can:users.view');
+        Route::get('/create', [UserController::class, 'create'])->name('create')->middleware('can:users.create');
+        Route::post('/', [UserController::class, 'store'])->name('store')->middleware('can:users.create');
+        Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit')->middleware('can:users.update');
+        Route::put('/{user}', [UserController::class, 'update'])->name('update')->middleware('can:users.update');
+        Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status')->middleware('can:users.disable');
+        Route::post('/{user}/reinvite', [UserController::class, 'reinvite'])->name('reinvite')->middleware('can:users.create');
+    });
+
+    Route::prefix('roles')->name('roles.')->group(function () {
+        Route::get('/', [RoleController::class, 'index'])->name('index')->middleware('can:roles.view');
+        Route::post('/', [RoleController::class, 'store'])->name('store')->middleware('can:roles.create');
+        Route::get('/{role}/edit', [RoleController::class, 'edit'])->name('edit')->middleware('can:roles.update');
+        Route::put('/{role}', [RoleController::class, 'update'])->name('update')->middleware('can:roles.update');
+        Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy')->middleware('can:roles.delete');
+    });
+
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index')->middleware('can:settings.view');
+    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update')->middleware('can:settings.update');
+    Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index')->middleware('can:audit.view');
 
     Route::get('/warehouse-stocks', [WarehouseStockController::class, 'index'])->name('warehouse-stocks.index')->middleware('can:inventory.view');
     Route::get('/stock-movements', [StockMovementController::class, 'index'])->name('stock-movements.index')->middleware('can:stock_movements.view');

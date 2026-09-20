@@ -16,11 +16,11 @@
     </div>
 
     {{-- البحث --}}
-    <div class="relative hidden md:block">
+    <form method="GET" action="{{ route('search') }}" class="relative hidden md:block">
         <x-icon name="search" class="pointer-events-none absolute inset-y-0 start-3 my-auto size-4 text-slate-400" />
-        <input type="search" placeholder="ابحث برقم الفاتورة أو اسم المنتج…"
+        <input type="search" name="q" value="{{ request('q') }}" placeholder="ابحث برقم الفاتورة أو اسم المنتج…"
                class="w-72 rounded-lg border border-slate-200 bg-slate-50 py-2 pe-3 ps-9 text-sm text-slate-700 placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20" />
-    </div>
+    </form>
 
     {{-- حالة الجلسة --}}
     @php

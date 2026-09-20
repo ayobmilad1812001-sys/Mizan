@@ -62,11 +62,11 @@
             'icon' => 'reports',
             'key' => 'reports',
             'items' => [
-                ['label' => 'تقرير المبيعات', 'key' => 'reports.sales', 'url' => '#', 'permission' => 'reports.sales'],
-                ['label' => 'تقرير المشتريات', 'key' => 'reports.purchases', 'url' => '#', 'permission' => 'reports.purchases'],
-                ['label' => 'تقرير المخزون', 'key' => 'reports.inventory', 'url' => '#', 'permission' => 'reports.inventory'],
-                ['label' => 'تقرير الأرباح', 'key' => 'reports.profit', 'url' => '#', 'permission' => 'reports.profit'],
-                ['label' => 'تقرير حركات المخزون', 'key' => 'reports.movements', 'url' => '#', 'permission' => 'reports.movements'],
+                ['label' => 'تقرير المبيعات', 'key' => 'reports.sales', 'url' => route('reports.sales'), 'permission' => 'reports.sales'],
+                ['label' => 'تقرير المشتريات', 'key' => 'reports.purchases', 'url' => route('reports.purchases'), 'permission' => 'reports.purchases'],
+                ['label' => 'تقرير المخزون', 'key' => 'reports.inventory', 'url' => route('reports.inventory'), 'permission' => 'reports.inventory'],
+                ['label' => 'تقرير الأرباح', 'key' => 'reports.profit', 'url' => route('reports.profit'), 'permission' => 'reports.profit'],
+                ['label' => 'تقرير حركات المخزون', 'key' => 'reports.movements', 'url' => route('reports.movements'), 'permission' => 'reports.movements'],
             ],
         ],
         [
@@ -75,10 +75,10 @@
             'icon' => 'admin',
             'key' => 'admin',
             'items' => [
-                ['label' => 'الموظفون', 'key' => 'admin.users', 'url' => '#', 'permission' => 'users.view'],
-                ['label' => 'الأدوار والصلاحيات', 'key' => 'admin.roles', 'url' => '#', 'permission' => 'roles.view'],
-                ['label' => 'إعدادات النظام', 'key' => 'admin.settings', 'url' => '#', 'permission' => 'settings.view'],
-                ['label' => 'سجل التدقيق', 'key' => 'admin.audit', 'url' => '#', 'permission' => 'audit.view'],
+                ['label' => 'الموظفون', 'key' => 'admin.users', 'url' => route('users.index'), 'permission' => 'users.view'],
+                ['label' => 'الأدوار والصلاحيات', 'key' => 'admin.roles', 'url' => route('roles.index'), 'permission' => 'roles.view'],
+                ['label' => 'إعدادات النظام', 'key' => 'admin.settings', 'url' => route('settings.index'), 'permission' => 'settings.view'],
+                ['label' => 'سجل التدقيق', 'key' => 'admin.audit', 'url' => route('audit-logs.index'), 'permission' => 'audit.view'],
             ],
         ],
     ];
